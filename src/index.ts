@@ -1,0 +1,1 @@
+export { default as TiptopEditor } from './components/TiptopEditor'
