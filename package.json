@@ -11,7 +11,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/tiptop-editor.es.js",
       "require": "./dist/tiptop-editor.umd.js"
-    }
+    },
+    "./dist/tiptop-editor.css": "./dist/tiptop-editor.css"
   },
   "files": [
     "dist"
