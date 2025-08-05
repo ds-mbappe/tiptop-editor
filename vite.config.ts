@@ -29,7 +29,9 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
+        assetFileNames: 'tiptop-editor.[ext]',
       },
     },
+    cssCodeSplit: true
   },
 })
