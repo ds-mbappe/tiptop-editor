@@ -1,6 +1,6 @@
 {
   "name": "tiptop-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Notion-like editor built with Tiptap v3 and HeroUI",
   "type": "module",
   "main": "./dist/tiptop-editor.umd.js",
@@ -38,11 +38,28 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.3",
     "@heroui/react": "^2.8.2",
     "@tailwindcss/vite": "^4.1.11",
+    "@tiptap/extension-bubble-menu": "^3.0.9",
+    "@tiptap/extension-code-block-lowlight": "^3.0.9",
+    "@tiptap/extension-drag-handle": "^3.0.9",
+    "@tiptap/extension-drag-handle-react": "^3.0.9",
+    "@tiptap/extension-highlight": "^3.0.9",
+    "@tiptap/extension-horizontal-rule": "^3.0.9",
+    "@tiptap/extension-list": "^3.0.9",
+    "@tiptap/extension-node-range": "^3.0.9",
+    "@tiptap/extension-subscript": "^3.0.9",
+    "@tiptap/extension-superscript": "^3.0.9",
+    "@tiptap/extension-text-align": "^3.0.9",
+    "@tiptap/extension-text-style": "^3.0.9",
+    "@tiptap/extensions": "^3.0.9",
     "@tiptap/react": "^3.0.9",
     "@tiptap/starter-kit": "^3.0.9",
+    "@tiptap/suggestion": "^3.0.9",
     "framer-motion": "^12.23.12",
+    "lowlight": "^3.3.0",
+    "lucide-react": "^0.536.0",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
