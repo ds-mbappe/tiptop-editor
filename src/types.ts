@@ -1,4 +1,4 @@
-import type { Editor, Range } from "@tiptap/react"
+import type { Editor, EditorContentProps, EditorOptions, Range } from "@tiptap/react"
 import type { icons } from "lucide-react"
 
 export type EditorButtonProps = {
@@ -28,4 +28,8 @@ export type SlashCommandGroupProps = {
   key: string,
   title: string,
   commands: SlashCommandGroupCommandsProps[]
+}
+
+export type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
+  editorOptions?: Partial<EditorOptions>
 }

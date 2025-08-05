@@ -26,10 +26,7 @@ import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 
 import '../../node_modules/prosemirror-view/style/prosemirror.css'
-
-type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
-  editorOptions?: Partial<EditorOptions>
-}
+import { TiptopEditorProps } from '../types'
 
 export interface TiptopEditorHandle {
   getEditor: () => ReturnType<typeof useEditorState> | null

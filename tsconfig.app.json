@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true
   },
