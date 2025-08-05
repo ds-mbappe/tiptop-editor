@@ -1,0 +1,8 @@
+src/
+node_modules/
+vite.config.*
+tsconfig.json
+*.ts
+*.tsx
+.eslintrc.*
+.gitignore

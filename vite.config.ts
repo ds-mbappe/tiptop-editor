@@ -1,14 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dts from 'vite-plugin-dts'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path';
+import path from 'path'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss(), dts({ insertTypesEntry: true })],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
