@@ -1,24 +1,6 @@
-# 📝 Tiptop Editor
+# ATTENTION:
+I'am still working on the package, and finising the last touches.
+I will update this README with all there is to know when I'm done.
+So please do not be mad at me if you don't understand how to use the package, it will be dealt with very soon.
 
-A Notion-like rich text editor built with [Tiptap v3](https://tiptap.dev/) and [HeroUI](https://heroui.dev/), packaged as a plug-and-play React component.
-
-![npm version](https://img.shields.io/npm/v/tiptop-editor.svg)
-![bundle size](https://img.shields.io/bundlephobia/minzip/tiptop-editor)
-![license](https://img.shields.io/npm/l/tiptop-editor)
-
----
-
-## ✨ Features
-
-- Built on **Tiptap v3** — a powerful, headless rich-text editor
-- Styled with **HeroUI** + Tailwind
-- Fully typed with **TypeScript**
-- Ready to embed in any React app
-- Designed for **Notion-like UX**
-
----
-
-## 🚀 Installation
-
-```bash
-npm install tiptop-editor
+Thank you.
