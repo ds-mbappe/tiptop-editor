@@ -1,6 +1,7 @@
 # 📝 Tiptop Editor
 
 A Notion-like rich text editor built with [Tiptap v3](https://tiptap.dev/), [HeroUI](https://heroui.dev/), [Tailwind v4](https://https://tailwindcss.com) packaged as a plug-and-play React component.
+Inspired from [TipTap Notion-like](https://tiptap.dev/docs/ui-components/templates/notion-like-editor).
 
 ![npm version](https://img.shields.io/npm/v/tiptop-editor.svg)
 ![bundle size](https://img.shields.io/bundlephobia/minzip/tiptop-editor)
@@ -15,6 +16,10 @@ A Notion-like rich text editor built with [Tiptap v3](https://tiptap.dev/), [Her
 - Fully typed with **TypeScript**
 - Ready to embed in any React app
 - Designed for **Notion-like UX**
+
+
+https://github.com/user-attachments/assets/cb7d907d-bae0-4b3b-b6e7-8493180afd75
+
 
 ---
 
@@ -39,9 +44,9 @@ For the package to behave like it should, you have to import the compiled CSS fi
 - In any component file
   ```tsx
   import 'tiptop-editor/dist/tiptop-editor.css'
-**Example**
+## 🎨 Example
 The Tiptop component takes as props all the props from the `UseEditorOptions` from [*@tiptap/react*](https://www.npmjs.com/package/@tiptap/react), except the `extensions` prop.
-*Why only that prop, you ask ? Well, since this package is intended to *replicate* the Notion-like style with all their blocks/extensions, as of now, I have not allowed users to pass their own extensions. But that can change in the future, just not now.*
+*Why only that prop, you ask ? Well, since this package is intended to *replicate* the Notion-like style with all their blocks/extensions and plug-and-play, as of now, I have not allowed users to pass their own extensions. But that can change in the future, just not now.*
 Anyway, to use the package, just pass your props to `editorOptions` and you're good to go. Customize the Tiptop component will the props you want, as if you were using *EditorContent and passing props to the editor*.
 ```tsx
 <TiptopEditor editorOptions={{
@@ -53,9 +58,10 @@ Anyway, to use the package, just pass your props to `editorOptions` and you're g
 ```
 
 
-##### 🎨 Of course, I will continue to improve this project over time, as I have many more ideas (more extensions, more customizations, etc..)
+##### Of course, I will continue to improve this project over time, as I have many more ideas (more extensions, more customizations, etc..)
+##### Emoji Extension, Image extension, and more coming in next updates 🏃‍♂ ...
 
-I will also continue to update this Readme with relevant information.
+I will also document the Changelogs and releases, as well as continue to update this Readme with relevant information.
 
 *If you have any suggestions/recommendations to improve this project, any feedback is much appreciated (PRs welcome) !*
 *I also encourage you to open up *Issues* if you find releveant bugs inside the package.*
