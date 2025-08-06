@@ -1,6 +1,6 @@
 {
   "name": "tiptop-editor",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Notion-like editor built with Tiptap v3 and HeroUI",
   "type": "module",
   "main": "./dist/tiptop-editor.umd.js",
