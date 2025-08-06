@@ -18,7 +18,7 @@
 }
 
 .bubble-menu {
-  @apply flex items-center h-10 gap-1 p-[3px] border border-divider rounded-[15px] bg-background shadow-md outline-0 overflow-hidden
+  @apply flex items-center h-10 gap-1 p-[3px] border border-divider rounded-[15px] bg-background shadow-md outline-0 overflow-hidden z-50;
 }
 
 .ProseMirror {
@@ -244,6 +244,11 @@
   /* Highlight styles */
   mark {
     @apply rounded-md decoration-clone text-inherit px-1 py-0.5;
+  }
+
+  /* Bubble Menu animation styles */
+  .bubble-menu {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 

@@ -49,6 +49,29 @@ const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
     view.dispatch(transaction);
   };
 
+  const addSlashParagraphAfterCurrentBlock = useCallback(
+    (editor: Editor, currentNodePos: number) => {
+      if (currentNodePos === null) { /* empty */ };
+      
+      const resolvedPos = editor.state.doc.resolve(currentNodePos);
+      const blockNode = resolvedPos.nodeAfter || resolvedPos.parent;
+      
+      // Calculate the end of the current block
+      const blockEnd = currentNodePos + blockNode.nodeSize;
+      
+      editor
+        .chain()
+        .focus(blockEnd, { scrollIntoView: true })
+        .insertContentAt(blockEnd, {
+          type: 'paragraph',
+          content: [{ type: 'text', text: '/' }]
+        })
+        .setTextSelection(blockEnd + 2)
+        .run();
+    },
+    []
+  );
+
   return (
     <DragHandle
       editor={editor}
@@ -58,12 +81,12 @@ const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
       onNodeChange={handleNodeChange}
     >
       <div className='flex items-center pr-3'>
-        {/* <button
+        <button
           className='w-6 h-8 rounded-2xl flex justify-center items-center px-0 py-2 bg-transparent hover:bg-default-100 cursor-grab text-foreground-500 hover:text-foreground transition-all'
-          onClick={() => {}}
+          onClick={() => addSlashParagraphAfterCurrentBlock(editor, currentNodePos)}
         >
           <Icon name='Plus' />
-        </button> */}
+        </button>
 
         <Dropdown
           placement="right"

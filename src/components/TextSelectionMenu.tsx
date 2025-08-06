@@ -7,10 +7,15 @@ import { icons } from 'lucide-react'
 import ColorButtonMenu from './ColorButtonMenu'
 import MoreOptionsButtonMenu from './MoreOptionsButtonMenu'
 // import TransformIntoButtonMenu from './TransformIntoButtonMenu'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from '../helpers'
 
 const TextSelectionMenu = ({ editor, prepend, append }: { editor: Editor, prepend?: React.ReactNode, append?: React.ReactNode }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const formattingButtons = [
     {
       icon: 'Bold',
@@ -52,60 +57,101 @@ const TextSelectionMenu = ({ editor, prepend, append }: { editor: Editor, prepen
     return false;
   }, [editor])
 
-  if (!editor) return
+  const handleShow = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    setIsVisible(true);
+    setTimeout(() => setIsAnimating(true), 10);
+  }, []);
+
+  const handleHide = useCallback(() => {
+    setIsAnimating(false);
+    
+    timeoutRef.current = setTimeout(() => {
+      setIsVisible(false);
+    }, 200);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  if (!editor) return null
 
   return (
     <BubbleMenu
       editor={editor}
-      options={{ placement: 'top', offset: 5 }}
-      className='bubble-menu'
+      updateDelay={200}
+      options={{
+        offset: 3,
+        onShow: handleShow,
+        onHide: handleHide,
+      }}
       shouldShow={shouldShow}
     >
-      {prepend != null &&
-        <div className='flex items-center gap-1'>
-          {prepend}
+      <div
+        ref={menuRef}
+        className={`
+          bubble-menu
+          transition-all duration-200 ease-in-out
+          ${isVisible && isAnimating 
+            ? 'opacity-100' 
+            : 'opacity-0'
+          }
+        `}
+      >
+        {prepend != null &&
+          <div className='flex items-center gap-1'>
+            {prepend}
 
-          <Divider orientation='vertical' className='h-6' />
-        </div>
-      }
+            <Divider orientation='vertical' className='h-6' />
+          </div>
+        }
 
-      {/* I decided to comment this, because well transform into
-      already exists in the DragHandleMenu */}
-      {/* <TransformIntoButtonMenu editor={editor} />
+        {/* I decided to comment this, because well transform into
+        already exists in the DragHandleMenu */}
+        {/* <TransformIntoButtonMenu editor={editor} />
 
-      <Divider orientation='vertical' className='h-6' /> */}
+        <Divider orientation='vertical' className='h-6' /> */}
 
-      {formattingButtons.map((button) =>
-        <div key={button.buttonKey} className='flex item-center gap-0.5'>
-          <EditorButton
-            isIconOnly
-            withActive
-            editor={editor}
-            buttonKey={button.buttonKey}
-            tooltipText={button.tooltipText}
-            icon={button.icon as unknown as keyof typeof icons}
-            onPressed={button.command}
-          />
-        </div>
-      )}
+        {formattingButtons.map((button) =>
+          <div key={button.buttonKey} className='flex item-center gap-0.5'>
+            <EditorButton
+              isIconOnly
+              withActive
+              editor={editor}
+              buttonKey={button.buttonKey}
+              tooltipText={button.tooltipText}
+              icon={button.icon as unknown as keyof typeof icons}
+              onPressed={button.command}
+            />
+          </div>
+        )}
 
-      <Divider orientation='vertical' className='h-6' />
+        <Divider orientation='vertical' className='h-6' />
 
-      {/* <LinkButtonMenu editor={editor} /> */}
+        {/* <LinkButtonMenu editor={editor} /> */}
 
-      <ColorButtonMenu editor={editor} />
+        <ColorButtonMenu editor={editor} />
 
-      <Divider orientation='vertical' className='h-6' />
+        <Divider orientation='vertical' className='h-6' />
 
-      {append != null &&
-        <div className='flex items-center gap-1'>
-          {append}
+        {append != null &&
+          <div className='flex items-center gap-1'>
+            {append}
 
-          <Divider orientation='vertical' className='h-6' />
-        </div>
-      }
+            <Divider orientation='vertical' className='h-6' />
+          </div>
+        }
 
-      <MoreOptionsButtonMenu editor={editor} />
+        <MoreOptionsButtonMenu editor={editor} />
+      </div>
     </BubbleMenu>
   )
 }
