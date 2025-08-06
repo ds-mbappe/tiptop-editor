@@ -322,3 +322,23 @@ export const transformNodeToAlternative = (editor: Editor, targetOption: SlashCo
     applyTransformation()
   }
 }
+
+export const addOrUpdateLink = (editor: Editor, url: string) => {
+  if (!editor) return;
+
+  if (url === null) {
+    return
+  }
+
+  editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+}
+
+export const unsetLink = (editor: Editor) => {
+  if (!editor) return;
+  
+  const previousUrl = editor.getAttributes('link')?.href
+
+  if (previousUrl) {
+    editor.chain().focus().extendMarkRange('link').unsetLink().run()
+  }
+}

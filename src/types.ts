@@ -1,7 +1,7 @@
 import type { Editor, EditorContentProps, Range, UseEditorOptions } from "@tiptap/react"
 import type { icons } from "lucide-react"
 
-export type EditorButtonProps = {
+export interface EditorButtonProps {
   tooltipText?: React.ReactNode,
   isIconOnly?: boolean,
   isDisabled?: boolean,
@@ -16,7 +16,7 @@ export type EditorButtonProps = {
   onPressed?: () => void,
 }
 
-export type SlashCommandGroupCommandsProps = {
+export interface SlashCommandGroupCommandsProps {
   key: string,
   title: string,
   icon: string,
@@ -24,7 +24,7 @@ export type SlashCommandGroupCommandsProps = {
   command: ({ editor, range }: { editor: Editor, range: Range }) => void
 }
 
-export type SlashCommandGroupProps = {
+export interface SlashCommandGroupProps {
   key: string,
   title: string,
   commands: SlashCommandGroupCommandsProps[]
@@ -32,4 +32,20 @@ export type SlashCommandGroupProps = {
 
 export type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
   editorOptions?: Partial<UseEditorOptions>
+}
+
+export interface ColorButtonProps {
+  editor: Editor;
+  buttonType: string | 'text' | 'highlight';
+  hsl: string;
+  color: string;
+  bgColor: string;
+  tooltipText?: string;
+  tooltipDisabled?: boolean;
+}
+
+export interface TextSelectionMenuProps {
+  editor: Editor;
+  prepend?: React.ReactNode;
+  append?: React.ReactNode;
 }

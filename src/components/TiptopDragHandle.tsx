@@ -11,43 +11,38 @@ import DragHandleColorList from './DragHandleColorList'
 import TransformIntoIcon from './TransformIntoIcon'
 import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../helpers'
 
+const formattedTransformOptions = commandGroups.flatMap(group => group.commands)
+
 const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
-  const [, setCurrentNode] = useState<Node | null>(null)
   const [currentNodePos, setCurrentNodePos] = useState<number>(-1)
   const [dropdownOpened, setDropdownOpened] = useState<boolean>(false)
   const [isOpenColorMenu, setIsOpenColorMenu] = useState<boolean>(false)
   const [isOpenTransformMenu, setIsOpenTransformMenu] = useState<boolean>(false)
 
-  const formattedTransformOptions = commandGroups.flatMap(group => group.commands)
-
   const handleNodeChange = useCallback(
-    (data: { editor: Editor, node: Node | null, pos: number }) => {
-      if (data.node) {
-        setCurrentNode(data.node)
-      }
-
-      setCurrentNodePos(data.pos)
+    ({ pos }: { editor: Editor; node: Node | null; pos: number }) => {
+      setCurrentNodePos(pos);
     },
-    [setCurrentNodePos, setCurrentNode],
-  )
+    []
+  );
 
-  const selectCurrentNode = () => {
+  const selectCurrentNode = useCallback(() => {
     setDropdownOpened(!dropdownOpened)
-
+  
     const { state, view } = editor;
-
+  
     const selection = window.getSelection();
-
+  
     if (selection && !selection.isCollapsed) {
       selection.removeAllRanges();
     }
-
+  
     const transaction = state.tr.setSelection(
       NodeSelection.create(state.doc, currentNodePos)
     );
-
+  
     view.dispatch(transaction);
-  };
+  }, [dropdownOpened, editor, currentNodePos])
 
   const addSlashParagraphAfterCurrentBlock = useCallback(
     (editor: Editor, currentNodePos: number) => {
@@ -111,7 +106,6 @@ const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
           >
             <DropdownSection
               showDivider={canShowColorTransform(editor) ? true : false}
-              // title={currentNode?.type.name}
             >
               {canShowColorTransform(editor)
                 ? <DropdownItem

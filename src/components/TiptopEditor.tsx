@@ -1,11 +1,10 @@
 import {
   useEditor,
   useEditorState,
-  type EditorOptions,
 } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Card } from '@heroui/react'
-import { EditorContent, type EditorContentProps } from '@tiptap/react'
+import { EditorContent } from '@tiptap/react'
 import {
   forwardRef,
   useImperativeHandle,
@@ -53,6 +52,10 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
             levels: [1, 2, 3]
           },
           horizontalRule: false,
+          link: {
+            openOnClick: false,
+            defaultProtocol: 'https'
+          }
         }),
         ListKit,
         Placeholder.configure({

@@ -250,6 +250,11 @@
   .bubble-menu {
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
+  /* Link styles */
+  a {
+    @apply text-primary cursor-pointer underline;
+  }
 }
 
 .ProseMirror ::selection {
