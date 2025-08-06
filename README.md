@@ -50,7 +50,7 @@ The Tiptop component takes as props all the props from the `UseEditorOptions` fr
 Anyway, to use the package, just pass your props to `editorOptions` and you're good to go. Customize the Tiptop component will the props you want, as if you were using *EditorContent and passing props to the editor*.
 ```tsx
 <TiptopEditor editorOptions={{
-    immediatelyRender: false
+    immediatelyRender: false // If using SSR (ex. a NextJS project) otherwise you can omit it
     content: '<p>I am the Tiptop Editor</p>'
     ... // Other props
   }}
