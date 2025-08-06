@@ -31,7 +31,7 @@ export interface SlashCommandGroupProps {
 }
 
 export type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
-  editorOptions?: Partial<UseEditorOptions>
+  editorOptions?: Omit<Partial<UseEditorOptions>, 'extensions'>
 }
 
 export interface ColorButtonProps {
