@@ -26,6 +26,7 @@ import Superscript from '@tiptap/extension-superscript'
 
 import '../../node_modules/prosemirror-view/style/prosemirror.css'
 import { TiptopEditorProps } from '../types'
+import TiptopEmoji from '../extensions/emoji/TiptopEmoji'
 
 export interface TiptopEditorHandle {
   getEditor: () => ReturnType<typeof useEditorState> | null
@@ -73,6 +74,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
         }),
         Subscript,
         Superscript,
+        TiptopEmoji,
         SlashCommand.configure({
           suggestion: SlashCommandSuggestion
         }),

@@ -2,9 +2,9 @@ import { computePosition, flip, shift } from '@floating-ui/dom'
 import { Editor, posToDOMRect, ReactRenderer } from '@tiptap/react'
 import { PluginKey } from '@tiptap/pm/state'
 
-import SlashCommandList, { type SlashCommandListRef } from './SlashCommandList'
+import SlashCommandList from './SlashCommandList'
 import { commandGroups } from '../../constants'
-import type { SlashCommandGroupCommandsProps, SlashCommandGroupProps } from '../../types'
+import type { KeyDownRef, SlashCommandGroupCommandsProps, SlashCommandGroupProps } from '../../types'
 import type { SuggestionKeyDownProps, SuggestionProps } from '@tiptap/suggestion'
 
 const updatePosition = (editor: Editor, element: HTMLElement) => {
@@ -51,7 +51,7 @@ export default {
   },
 
   render: () => {
-    let reactRenderer: ReactRenderer<SlashCommandListRef, { items: SlashCommandGroupProps[]; command: (item: SlashCommandGroupCommandsProps) => void }>
+    let reactRenderer: ReactRenderer<KeyDownRef, { items: SlashCommandGroupProps[]; command: (item: SlashCommandGroupCommandsProps) => void }>
 
     return {
       onStart: (props: SuggestionProps) => {

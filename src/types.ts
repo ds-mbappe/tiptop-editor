@@ -49,3 +49,7 @@ export interface TextSelectionMenuProps {
   prepend?: React.ReactNode;
   append?: React.ReactNode;
 }
+
+export interface KeyDownRef {
+  onKeyDown: (props: { event: KeyboardEvent }) => boolean;
+}

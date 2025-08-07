@@ -44,6 +44,7 @@ export default defineConfig({
         '@tiptap/extension-superscript',
         '@tiptap/extension-superscript',
         '@tiptap/extension-text-style',
+        '@tiptap/extension-emoji',
         '@tiptap/extensions',
         '@tiptap/react',
         '@tiptap/starter-kit',

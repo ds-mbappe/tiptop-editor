@@ -4,16 +4,12 @@ import {
   forwardRef,
   useEffect,
 } from 'react';
-import type { SlashCommandGroupProps, SlashCommandGroupCommandsProps } from '../../types';
+import type { SlashCommandGroupProps, SlashCommandGroupCommandsProps, KeyDownRef } from '../../types';
 import { cn, Divider } from '@heroui/react';
 import { icons } from 'lucide-react';
 import Icon from '../../components/Icon';
 
-export interface SlashCommandListRef {
-  onKeyDown: (props: { event: KeyboardEvent }) => boolean;
-}
-
-const SlashCommandList = forwardRef<SlashCommandListRef, {
+const SlashCommandList = forwardRef<KeyDownRef, {
   items: SlashCommandGroupProps[];
   command: (item: SlashCommandGroupCommandsProps) => void;
 }>(({ items, command }, ref) => {
@@ -109,9 +105,7 @@ const SlashCommandList = forwardRef<SlashCommandListRef, {
           </div>
         ))
       ) : (
-        <p
-          className="text-foreground-500 text-sm"
-        >
+        <p className="text-foreground-500 text-sm">
           {'No results'}
         </p>
       )}
