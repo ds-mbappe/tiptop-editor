@@ -255,6 +255,11 @@
   a {
     @apply text-primary cursor-pointer underline;
   }
+
+  /* Image Node View styles */
+  .node-imageUploader {
+    @apply my-8
+  }
 }
 
 .ProseMirror ::selection {

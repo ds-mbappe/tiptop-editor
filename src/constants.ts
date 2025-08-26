@@ -144,6 +144,15 @@ export const commandGroups = [
           editor.chain().focus().deleteRange(range).setHorizontalRule().run()
         },
       },
+      {
+        key: 'imageUploader',
+        title: 'Image',
+        icon: 'Image',
+        description: '',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).insertImageUploader().run()
+        },
+      },
     ]
   }
 ]

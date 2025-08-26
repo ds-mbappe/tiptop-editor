@@ -1,7 +1,7 @@
 import DragHandle from '@tiptap/extension-drag-handle-react'
 import { Editor } from '@tiptap/react'
 import { Node } from '@tiptap/pm/model'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeSelection } from '@tiptap/pm/state'
 import Icon from './Icon'
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Kbd, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from '@heroui/react'
@@ -9,15 +9,26 @@ import { commandGroups } from '../constants'
 import type { icons } from 'lucide-react'
 import DragHandleColorList from './DragHandleColorList'
 import TransformIntoIcon from './TransformIntoIcon'
-import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../helpers'
+import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, isUploadingImage, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../helpers'
 
-const formattedTransformOptions = commandGroups.flatMap(group => group.commands)
+const excludedCommands = ['imageUploader'];
+
+const formattedTransformOptions = commandGroups.flatMap(group => group.commands).filter(command => !excludedCommands.includes(command.key))
 
 const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
   const [currentNodePos, setCurrentNodePos] = useState<number>(-1)
   const [dropdownOpened, setDropdownOpened] = useState<boolean>(false)
   const [isOpenColorMenu, setIsOpenColorMenu] = useState<boolean>(false)
   const [isOpenTransformMenu, setIsOpenTransformMenu] = useState<boolean>(false)
+
+  const dragHandleDisabledKeys = useMemo(() => {
+    const isUploading = isUploadingImage(editor.state)
+    
+    if (isUploading) {
+      return ['duplicate_node']
+    }
+    return []
+  }, [editor.state])
 
   const handleNodeChange = useCallback(
     ({ pos }: { editor: Editor; node: Node | null; pos: number }) => {
@@ -100,6 +111,7 @@ const TiptopDragHandle = ({ editor }: { editor: Editor }) => {
           <DropdownMenu
             variant='flat'
             closeOnSelect={false}
+            disabledKeys={dragHandleDisabledKeys}
             classNames={{
               base: 'w-[225px]'
             }}

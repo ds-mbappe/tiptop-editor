@@ -1,9 +1,11 @@
-import { Editor, isTextSelection } from '@tiptap/core';
-import { NodeSelection, TextSelection } from '@tiptap/pm/state';
+import { Editor, findParentNodeClosestToPos, isTextSelection } from '@tiptap/core';
+import { EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state';
 import { CodeBlock } from './extensions/CodeBlock';
 import HorizontalRule from './extensions/HorizontalRule';
 import type { SlashCommandGroupCommandsProps } from './types';
-import type { Node } from '@tiptap/pm/model';
+import { Node } from '@tiptap/pm/model';
+import { addToast } from '@heroui/react';
+import CloseIcon from './components/CloseIcon';
 
 export const isTextSelected = (editor: Editor) => {
   const { state } = editor;
@@ -72,7 +74,8 @@ export const canShowNodeTransform = (editor: Editor) => {
   const { state } = editor;
   const { selection } = state;
   const forbiddenNodes = [
-    'horizontalRule'
+    'horizontalRule',
+    'imageUploader'
   ]
 
   if (!(selection instanceof NodeSelection)) return;
@@ -82,6 +85,19 @@ export const canShowNodeTransform = (editor: Editor) => {
   if (!node) return;
 
   return !forbiddenNodes.includes(node.type.name)
+}
+
+export const canShowDownloadImage = (editor: Editor) => {
+  const { state } = editor;
+  const { selection } = state;
+
+  if (!(selection instanceof NodeSelection)) return;
+
+  const node = selection.node;
+
+  if (!node) return;
+
+  return node.type.name === 'imageUploader'
 }
 
 export const hasAtLeastOneMark = (editor: Editor) => {
@@ -122,6 +138,23 @@ export const nodeHasTextContent = (editor: Editor) => {
   if (!node) return;
 
   return node.textContent.trim().length > 0;
+}
+
+export const isUploadingImage = (editorState: EditorState) => {
+  const { selection, doc } = editorState
+  
+  let node;
+  
+  if (selection instanceof NodeSelection) {
+    node = selection.node
+  } else {
+    const resolvedPos = doc.resolve(selection.from)
+    node = resolvedPos.nodeAfter || resolvedPos.parent
+  }
+  
+  if (!node) return false
+  
+  return node.type.name === 'imageUploader' && node.attrs?.id && node.attrs?.uploading
 }
 
 export const duplicateNode = (editor: Editor) => {
@@ -192,6 +225,17 @@ export const deleteNode = (editor: Editor) => {
   if (!(selection instanceof NodeSelection)) return;
 
   const { from, to } = selection
+  const { node } = selection
+  const { attrs } = node
+
+  
+  if (node.type.name === 'imageUploader' && attrs.id && attrs.uploading) {
+    editor?.storage.imageUploaderExtension.cancelUpload(editor, attrs.id)
+    editor.view.focus()
+
+    if (attrs?.uploading) showToast('Info', 'primary', 'Upload cancelled.')
+    return
+  }
 
   editor.chain().focus().deleteRange({ from, to }).run()
   editor.view.focus()
@@ -341,4 +385,121 @@ export const unsetLink = (editor: Editor) => {
   if (previousUrl) {
     editor.chain().focus().extendMarkRange('link').unsetLink().run()
   }
+}
+
+export const uploadWithProgress = async ({ file, url, onProgress, signal }: { file: File, url: string, onProgress: (percent: number) => boolean | void, signal?: AbortSignal }): Promise<{ url: string }> => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    
+    // Handle cancellation
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        xhr.abort()
+        reject(new Error('AbortError'))
+      })
+    }
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100)
+        
+        // Check if upload should be cancelled via onProgress return value
+        const shouldContinue = onProgress(percent)
+        if (!shouldContinue) {
+          xhr.abort()
+          reject(new Error('AbortError'))
+          return
+        }
+      }
+    })
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const response = JSON.parse(xhr.responseText)
+          resolve(response)
+        } catch (e) {
+          reject(new Error('Invalid JSON response'))
+        }
+      } else {
+        reject(new Error(`Upload failed with status ${xhr.status}`))
+      }
+    })
+
+    xhr.addEventListener('error', () => {
+      reject(new Error('Network error during upload'))
+    })
+
+    xhr.addEventListener('abort', () => {
+      reject(new Error('AbortError'))
+    })
+
+    // Setup and send request
+    const formData = new FormData()
+    formData.append('file', file)
+
+    xhr.open('POST', url)
+    xhr.send(formData)
+  })
+}
+
+export const generateUniqueId = () => {
+  return `upload-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+}
+
+export const updateNodeByPos = (editor: Editor, find: { id?: string; pos?: number }, attrs: Record<string, string | boolean | number | File | null>) => {
+  const { state, view } = editor
+  const { doc } = state
+
+  let pos: number | null = null
+
+  if (typeof find.pos === 'number') {
+    pos = find.pos
+  } else if (find.id) {
+    // fallback: find by id (your existing logic)
+    let p: number | null = null
+    doc.descendants((node, posHere) => {
+      if (node.type.name === 'imageUploader' && node.attrs.id === find.id) {
+        p = posHere
+        return false
+      }
+      return true
+    })
+    pos = p
+  }
+
+  if (pos === null) {
+    console.log('Could not find imageUploader node to update')
+    return
+  }
+
+  const tr = state.tr.setNodeMarkup(pos, undefined, {
+    ...state.doc.nodeAt(pos)?.attrs,
+    ...attrs,
+  })
+
+  view.dispatch(tr)
+}
+
+export const showToast = (
+  title?: string,
+  color?: "primary" | "default" | "foreground" | "secondary" | "success" | "warning" | "danger" | undefined,
+  description?: string
+) => {
+  addToast({
+    title: title || 'Title',
+    color: color || 'primary',
+    timeout: 5000,
+    description: description || 'Description',
+    classNames: {
+      closeButton: "opacity-100 absolute right-4 top-1/2 -translate-y-1/2",
+    },
+    closeIcon: CloseIcon,
+  })
+}
+
+export const getUploaderAtPos = (state: Editor['state'], pos: number) => {
+  const $pos = state.doc.resolve(Math.max(0, Math.min(pos, state.doc.content.size)))
+  return findParentNodeClosestToPos($pos, n => n.type.name === 'imageUploader')
+  // returns { pos, depth, start, node } | null
 }

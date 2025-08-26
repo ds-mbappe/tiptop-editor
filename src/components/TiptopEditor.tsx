@@ -27,6 +27,8 @@ import Superscript from '@tiptap/extension-superscript'
 import '../../node_modules/prosemirror-view/style/prosemirror.css'
 import { TiptopEditorProps } from '../types'
 import TiptopEmoji from '../extensions/emoji/TiptopEmoji'
+import { ImageUploader } from '../extensions/image/ImageUploader'
+import ImageUploaderExtension from '../extensions/image/ImageUploaderExtension'
 
 export interface TiptopEditorHandle {
   getEditor: () => ReturnType<typeof useEditorState> | null
@@ -56,6 +58,10 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
           link: {
             openOnClick: false,
             defaultProtocol: 'https'
+          },
+          dropcursor: {
+            width: 1.5,
+            color: 'hsl(var(--heroui-primary))',
           }
         }),
         ListKit,
@@ -75,6 +81,11 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
         Subscript,
         Superscript,
         TiptopEmoji,
+        ImageUploader,
+        ImageUploaderExtension.configure({
+          imgUploadUrl: editorOptions.imgUploadUrl,
+          imgUploadResponseKey: editorOptions.imgUploadResponseKey,
+        }),
         SlashCommand.configure({
           suggestion: SlashCommandSuggestion
         }),
