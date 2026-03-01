@@ -1,6 +1,5 @@
 import {
   useEditor,
-  useEditorState,
 } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Card, cn } from '@heroui/react'
@@ -27,15 +26,14 @@ import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 
 import 'prosemirror-view/style/prosemirror.css'
-import { TiptopEditorProps } from '../../types'
+import {
+  TiptopEditorHandle,
+  TiptopEditorProps,
+} from '../../types'
 import TiptopEmoji from '../../extensions/emoji/TiptopEmoji'
 import { ImageUploader } from '../../extensions/image/ImageUploader'
 import ImageUploaderExtension from '../../extensions/image/ImageUploaderExtension'
 import TableSelectionMenu from './TableSelectionMenu'
-
-export interface TiptopEditorHandle {
-  getEditor: () => ReturnType<typeof useEditorState> | null
-}
 
 const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
   ({ editorOptions = {}, className, ...rest }, ref) => {
@@ -111,6 +109,18 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
 
     useImperativeHandle(ref, () => ({
       getEditor: () => editor,
+      on: ((...args) => {
+        editor?.on(...args)
+        return editor as NonNullable<typeof editor>
+      }) as TiptopEditorHandle['on'],
+      off: ((...args) => {
+        editor?.off(...args)
+        return editor as NonNullable<typeof editor>
+      }) as TiptopEditorHandle['off'],
+      once: ((...args) => {
+        editor?.once(...args)
+        return editor as NonNullable<typeof editor>
+      }) as TiptopEditorHandle['once'],
     }), [editor])
 
     const Wrapper = disableDefaultContainer ? Fragment : Card

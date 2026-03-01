@@ -4,6 +4,39 @@
 
 - Nothing yet.
 
+## 1.2.0 - 2026-03-02
+
+Diff baseline: `v1.1.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Added
+
+- Added Storybook support for the package with a dedicated `TiptopEditor` story.
+- Added automated Storybook deployment to GitHub Pages.
+- Added imperative editor event methods to the component ref:
+  - `on`
+  - `off`
+  - `once`
+- Added README documentation for binding to Tiptap editor events through the component ref.
+
+### Changed
+
+- Reorganized `src/components` into `editor`, `menus`, and `ui` groups to make future feature work easier to maintain.
+- Updated Storybook preview layout so the drag handle has enough left gutter in the iframe.
+
+### Fixed
+
+- Fixed the `TiptopEditor` ref handle to return the actual editor instance from `getEditor()`.
+- Replaced the brittle relative ProseMirror CSS import with the package import form.
+
+### Internal
+
+- Added release workflow support for generating GitHub Releases from `CHANGELOG.md`.
+- Made the npm publish workflow idempotent for reruns when a version is already published.
+
 ## 1.1.0 - 2026-03-01
 
 Diff baseline: `v1.0.18`

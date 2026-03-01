@@ -45,6 +45,40 @@ export function Editor() {
 
 `editorOptions` accepts the same options as `useEditor` from `@tiptap/react`, except `extensions`, which is managed internally by the package.
 
+## Editor Ref and Events
+
+You can access the editor instance and bind Tiptap runtime event listeners through the component ref.
+
+```tsx
+import { useEffect, useRef } from 'react'
+import { TiptopEditor, type TiptopEditorHandle } from 'tiptop-editor'
+
+export function EditorWithEvents() {
+  const editorRef = useRef<TiptopEditorHandle>(null)
+
+  useEffect(() => {
+    const handleUpdate = ({ editor }: { editor: NonNullable<ReturnType<TiptopEditorHandle['getEditor']>> }) => {
+      console.log(editor.getHTML())
+    }
+
+    editorRef.current?.on('update', handleUpdate)
+
+    return () => {
+      editorRef.current?.off('update', handleUpdate)
+    }
+  }, [])
+
+  return <TiptopEditor ref={editorRef} />
+}
+```
+
+Available ref methods:
+
+- `getEditor()`
+- `on(event, callback)`
+- `off(event, callback?)`
+- `once(event, callback)`
+
 ## Custom Editor UI Options
 
 `TiptopEditor` also supports a few package-specific options inside `editorOptions`:

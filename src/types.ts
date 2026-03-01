@@ -88,6 +88,13 @@ export interface TextSelectionMenuProps {
   append?: React.ReactNode;
 }
 
+export interface TiptopEditorHandle {
+  getEditor: () => Editor | null
+  on: Editor['on']
+  off: Editor['off']
+  once: Editor['once']
+}
+
 export interface KeyDownRef {
   onKeyDown: (props: { event: KeyboardEvent }) => boolean;
 }
