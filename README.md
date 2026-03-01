@@ -1,69 +1,215 @@
-# 📝 Tiptop Editor
+# Tiptop Editor
 
-A Notion-like rich text editor built with [Tiptap v3](https://tiptap.dev/), [HeroUI](https://heroui.dev/), [Tailwind v4](https://https://tailwindcss.com) packaged as a plug-and-play React component.
-Inspired from [TipTap Notion-like](https://tiptap.dev/docs/ui-components/templates/notion-like-editor).
+A Notion-like rich text editor built with [Tiptap v3](https://tiptap.dev/), [HeroUI](https://www.heroui.com/), and Tailwind CSS, packaged as a plug-and-play React component.
+
+Inspired by Tiptap's Notion-like editor template:
+https://tiptap.dev/docs/ui-components/templates/notion-like-editor
 
 ![npm version](https://img.shields.io/npm/v/tiptop-editor.svg)
 ![bundle size](https://img.shields.io/bundlephobia/minzip/tiptop-editor)
 ![license](https://img.shields.io/npm/l/tiptop-editor)
 
----
+## Features
 
-## ✨ Features
+- Tiptap v3 editor with a ready-to-use Notion-like UI
+- Slash commands for inserting blocks
+- Table support with row, column, header, split, and merge actions
+- Emoji suggestions triggered with `:`
+- Built-in image uploader block
+- Text formatting, lists, code blocks, highlights, alignment, subscript, and superscript
+- TypeScript support
 
-- Built on **Tiptap v3** — a powerful, headless rich-text editor
-- Styled with **HeroUI** + **Tailwind**
-- Fully typed with **TypeScript**
-- Ready to embed in any React app
-- Designed for **Notion-like UX**
+## Installation
 
-
-https://github.com/user-attachments/assets/cb7d907d-bae0-4b3b-b6e7-8493180afd75
-
-
----
-
-## ⚙️ Installation
 ```bash
 npm install tiptop-editor
 ```
 
-## 🚀 Usage
+## Basic Usage
 
-**Import the component in your app**
-  ```tsx
-  import { TiptopEditor } from "tiptop-editor";
-
-  <TiptopEditor />
-  ```
-**Add the CSS code to your app**
-For the package to behave like it should, you have to import the compiled CSS file. Add this line in your main css file, or import it directly in the component file that's going to host the **TiptopEditor**.
-- In your main css file
-  ```css
-  @import '../node_modules/tiptop-editor/dist/tiptop-editor.css';
-- In any component file
-  ```tsx
-  import 'tiptop-editor/dist/tiptop-editor.css'
-## 🎨 Example
-The Tiptop component takes as props all the props from the `UseEditorOptions` from [*@tiptap/react*](https://www.npmjs.com/package/@tiptap/react), except the `extensions` prop.
-*Why only that prop, you ask ? Well, since this package is intended to *replicate* the Notion-like style with all their blocks/extensions and plug-and-play, as of now, I have not allowed users to pass their own extensions. But that can change in the future, just not now.*
-Anyway, to use the package, just pass your props to `editorOptions` and you're good to go. Customize the Tiptop component will the props you want, as if you were using *EditorContent and passing props to the editor*.
 ```tsx
-<TiptopEditor editorOptions={{
-    immediatelyRender: false // If using SSR (ex. a NextJS project) otherwise you can omit it
-    content: '<p>I am the Tiptop Editor</p>'
-    ... // Other props
+import { TiptopEditor } from 'tiptop-editor'
+import 'tiptop-editor/dist/tiptop-editor.css'
+
+export function Editor() {
+  return (
+    <TiptopEditor
+      editorOptions={{
+        content: '<p>I am the Tiptop Editor</p>',
+        immediatelyRender: false,
+      }}
+    />
+  )
+}
+```
+
+`editorOptions` accepts the same options as `useEditor` from `@tiptap/react`, except `extensions`, which is managed internally by the package.
+
+## Custom Editor UI Options
+
+`TiptopEditor` also supports a few package-specific options inside `editorOptions`:
+
+```tsx
+<TiptopEditor
+  editorOptions={{
+    content: '<p>Custom layout</p>',
+    disableDefaultContainer: true,
+    showDragHandle: false,
   }}
 />
 ```
 
+- `disableDefaultContainer`
+  Disables the default HeroUI `Card` wrapper and removes the editor's built-in padding. Use this when you want the editor to live inside your own container/layout.
+- `showDragHandle`
+  Controls whether the block drag handle is rendered. Default: `true`.
 
-##### Of course, I will continue to improve this project over time, as I have many more ideas (more extensions, more customizations, etc..)
-##### Emoji Extension, Image extension, and more coming in next updates 🏃‍♂ ...
+## Built-in Extensions
 
-I will also document the Changelogs and releases, as well as continue to update this Readme with relevant information.
+The package ships with these extensions enabled out of the box:
 
-*If you have any suggestions/recommendations to improve this project, any feedback is much appreciated (PRs welcome) !*
-*I also encourage you to open up *Issues* if you find releveant bugs inside the package.*
+- `StarterKit`
+- `ListKit`
+- `Placeholder`
+- custom slash command menu
+- custom code block
+- custom horizontal rule
+- `TextStyle` and `Color`
+- `Highlight`
+- `TextAlign`
+- `Subscript`
+- `Superscript`
+- emoji suggestions
+- `TableKit`
+- image uploader block and upload handler
 
-**Thank you, and Happy Coding !**
+### Tables
+
+Type `/table` to insert a table.
+
+Inside a table you can:
+
+- add or remove rows
+- add or remove columns
+- toggle header row or header column
+- split a merged cell
+- merge adjacent selected cells
+
+To merge cells, drag across adjacent cells first, then use the table controls.
+
+### Emoji
+
+Type `:` followed by an emoji name to open emoji suggestions.
+
+## Image Extension
+
+The image feature is built around an `imageUploader` block.
+
+### How to insert an image block
+
+- Type `/image`
+- or use the slash menu and select `Image`
+
+Once inserted, the block lets the user click to upload or drag and drop an image.
+
+### Supported files
+
+- `image/png`
+- `image/jpeg`
+- `image/jpg`
+- max size: `5MB`
+
+### Demo mode with no backend
+
+If you do not provide upload options, the editor simulates an upload and displays the image using a local object URL. This is useful for local demos and prototypes.
+
+```tsx
+<TiptopEditor
+  editorOptions={{
+    content: '<p>Upload demo</p>',
+  }}
+/>
+```
+
+### Real upload mode
+
+To upload files to your backend, set both `imgUploadUrl` and `imgUploadResponseKey`.
+
+```tsx
+<TiptopEditor
+  editorOptions={{
+    content: '<p>Upload to my API</p>',
+    imgUploadUrl: '/api/upload',
+    imgUploadResponseKey: 'url',
+  }}
+/>
+```
+
+The editor sends a `POST` request with `multipart/form-data` and the file under the `file` field.
+
+`imgUploadResponseKey` is flexible. It supports:
+
+- a top-level key like `'url'`
+  Example:
+  ```tsx
+  <TiptopEditor
+    editorOptions={{
+      imgUploadUrl: '/api/upload',
+      imgUploadResponseKey: 'url',
+    }}
+  />
+  ```
+- a nested path like `'data.url'`
+  Example:
+  ```tsx
+  <TiptopEditor
+    editorOptions={{
+      imgUploadUrl: '/api/upload',
+      imgUploadResponseKey: 'data.url',
+    }}
+  />
+  ```
+- a path array like `['data', 'url']`
+  Example:
+  ```tsx
+  <TiptopEditor
+    editorOptions={{
+      imgUploadUrl: '/api/upload',
+      imgUploadResponseKey: ['data', 'url'],
+    }}
+  />
+  ```
+- a resolver function
+  Example:
+  ```tsx
+  <TiptopEditor
+    editorOptions={{
+      imgUploadUrl: '/api/upload',
+      imgUploadResponseKey: (response) => {
+        const asset = response.asset as { cdnUrl?: string } | undefined
+        return asset?.cdnUrl
+      },
+    }}
+  />
+  ```
+
+Your server response must include the uploaded image URL at the location you describe with `imgUploadResponseKey`.
+
+Example:
+
+```json
+{
+  "data": {
+    "url": "https://cdn.example.com/uploads/image-123.jpg"
+  }
+}
+```
+
+## Notes
+
+- If you use SSR, keep `immediatelyRender: false`.
+- The package manages the editor extensions internally, so custom `extensions` are intentionally not accepted yet.
+
+## Feedback
+
+Issues and pull requests are welcome.

@@ -1,6 +1,6 @@
 {
   "name": "tiptop-editor",
-  "version": "1.0.18",
+  "version": "1.1.0",
   "description": "Notion-like editor built with Tiptap v3 and HeroUI",
   "type": "module",
   "main": "./dist/tiptop-editor.umd.js",
@@ -17,6 +17,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ds-mbappe/tiptop-editor"
+  },
   "homepage": "https://github.com/ds-mbappe/tiptop-editor#readme",
   "bugs": {
     "url": "https://github.com/ds-mbappe/tiptop-editor/issues",
@@ -78,6 +82,7 @@
     "@tiptap/extension-node-range": "^3.0.9",
     "@tiptap/extension-subscript": "^3.0.9",
     "@tiptap/extension-superscript": "^3.0.9",
+    "@tiptap/extension-table": "^3.20.0",
     "@tiptap/extension-text-align": "^3.0.9",
     "@tiptap/extension-text-style": "^3.0.9",
     "@tiptap/extensions": "^3.0.9",

@@ -1,7 +1,16 @@
 import { Editor, Extension, type Range } from '@tiptap/core'
-import Suggestion from '@tiptap/suggestion'
+import Suggestion, { type SuggestionOptions } from '@tiptap/suggestion'
+import type {
+  SlashCommandGroupCommandsProps,
+  SlashCommandGroupProps,
+} from '../../types'
 
-export default Extension.create({
+export type SlashCommandSuggestionOptions = Omit<
+  SuggestionOptions<SlashCommandGroupProps, SlashCommandGroupCommandsProps>,
+  'editor'
+>
+
+export default Extension.create<{ suggestion: SlashCommandSuggestionOptions }>({
   name: 'slash-commands',
 
   addOptions() {

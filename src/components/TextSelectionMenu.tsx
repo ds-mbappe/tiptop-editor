@@ -5,6 +5,7 @@ import EditorButton from './EditorButton';
 import LinkButtonMenu from './LinkButtonMenu';
 import ColorButtonMenu from './ColorButtonMenu';
 import MoreOptionsButtonMenu from './MoreOptionsButtonMenu';
+import TableButtonMenu from './TableButtonMenu';
 import { icons } from 'lucide-react';
 import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from '../helpers';
 import { TextSelectionMenuProps } from '../types';
@@ -12,6 +13,7 @@ import { TextSelectionMenuProps } from '../types';
 const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isInTable, setIsInTable] = useState(() => editor.isActive('table'));
   const timeoutRef = useRef<NodeJS.Timeout>(null);
 
   const formattingButtons = useMemo(
@@ -39,6 +41,18 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
     setIsAnimating(false);
     timeoutRef.current = setTimeout(() => setIsVisible(false), 200);
   }, []);
+
+  useEffect(() => {
+    const update = () => setIsInTable(editor.isActive('table'));
+
+    editor.on('selectionUpdate', update);
+    editor.on('transaction', update);
+
+    return () => {
+      editor.off('selectionUpdate', update);
+      editor.off('transaction', update);
+    };
+  }, [editor]);
 
   useEffect(() => {
     return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
@@ -85,6 +99,13 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
         <ColorButtonMenu editor={editor} />
 
         <Divider orientation='vertical' className='h-6' />
+
+        {isInTable && (
+          <>
+            <TableButtonMenu editor={editor} />
+            <Divider orientation='vertical' className='h-6' />
+          </>
+        )}
 
         {append && (
           <div className='flex items-center gap-1'>

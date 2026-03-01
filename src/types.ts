@@ -1,6 +1,39 @@
 import type { Editor, EditorContentProps, Range, UseEditorOptions } from "@tiptap/react"
 import type { icons } from "lucide-react"
 
+export type ImageUploadResponseResolver =
+  | string
+  | string[]
+  | ((response: Record<string, unknown>) => string | null | undefined)
+
+export type TiptopEditorOptions = Omit<Partial<UseEditorOptions & {
+  /**
+ * The url of the server where the file should be uploaded.
+ * If not specified, the imageUploader will "fake" an upload for
+ * some seconds and create a local Url with the image file.
+ * @default undefined
+ */
+  imgUploadUrl?: string
+  /**
+ * The key that holds the value of the image url from your server's response.
+ * Supports nested paths like `data.url`, path arrays like `['data', 'url']`,
+ * or a custom resolver function.
+ * @default undefined
+ */
+  imgUploadResponseKey?: ImageUploadResponseResolver
+  /**
+ * Disables the default Card wrapper and removes the editor's built-in padding.
+ * Use this when you want to embed the editor inside your own layout container.
+ * @default false
+ */
+  disableDefaultContainer?: boolean
+  /**
+ * Controls whether the drag handle is rendered.
+ * @default true
+ */
+  showDragHandle?: boolean
+}>, 'extensions'>
+
 export interface EditorButtonProps {
   tooltipText?: React.ReactNode,
   isIconOnly?: boolean,
@@ -36,20 +69,7 @@ export type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
  * plus some other options specific to the Tiptop ccomponent
  * implementation.
  */
-  editorOptions?: Omit<Partial<UseEditorOptions & {
-    /**
-   * The url of the server where the file should be uploaded.
-   * If not specified, the imageUploader will "fake" an upload for
-   * some seconds and create a local Url with the image file.
-   * @default undefined
-   */
-    imgUploadUrl?: string
-  /**
-   * The key that holds the value of the image url from your server's response.
-   * @default undefined
-   */
-  imgUploadResponseKey?: string
-  }>, 'extensions'>
+  editorOptions?: TiptopEditorOptions
 }
 
 export interface ColorButtonProps {
@@ -82,9 +102,11 @@ export interface ImageUploaderExtensionOptions {
   imgUploadUrl?: string
   /**
    * The key that holds the value of the image url from your server's response.
+   * Supports nested paths like `data.url`, path arrays like `['data', 'url']`,
+   * or a custom resolver function.
    * @default undefined
    */
-  imgUploadResponseKey?: string
+  imgUploadResponseKey?: ImageUploadResponseResolver
   allowedMimeTypes?: string[]
   maxFileSize: number
 }

@@ -1,6 +1,6 @@
 import { Editor, Extension } from '@tiptap/core'
 import FileHandler from '@tiptap/extension-file-handler'
-import { showToast, updateNodeByPos, uploadWithProgress } from '../../helpers'
+import { getValueAtPath, showToast, updateNodeByPos, uploadWithProgress } from '../../helpers'
 import { ImageUploaderExtensionOptions, ImageUploaderExtensionStorage } from '../../types'
 
 declare module '@tiptap/core' {
@@ -223,11 +223,16 @@ export const ImageUploaderExtension = Extension.create<ImageUploaderExtensionOpt
               return
             }
 
-            if (!imgUploadResponseKey) throw new Error('You need to specify a key for the upload response, using the parameter *imgUploadResponseKey* of editorOptions !')
+            if (!imgUploadResponseKey) {
+              throw new Error('You need to specify a key or resolver for the upload response using *imgUploadResponseKey* in editorOptions.')
+            }
 
-            const uploadedUrl = response?.[imgUploadResponseKey as keyof typeof response]
+            const uploadedUrl = typeof imgUploadResponseKey === 'function'
+              ? imgUploadResponseKey(response)
+              : getValueAtPath(response, imgUploadResponseKey)
 
             if (!uploadedUrl) throw new Error('No URL returned from server')
+            if (typeof uploadedUrl !== 'string') throw new Error('The upload response resolver must return a string URL')
 
             handleSuccess(uploadedUrl)
           } catch (error: unknown) {

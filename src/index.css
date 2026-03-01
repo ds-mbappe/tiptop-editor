@@ -236,6 +236,38 @@
     }
   }
 
+  /* Table styles */
+  .tableWrapper {
+    @apply my-6 overflow-x-auto;
+  }
+
+  table {
+    @apply w-full border-collapse;
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    @apply relative min-w-32 border border-divider px-3 py-2 align-top;
+  }
+
+  th {
+    @apply bg-content2 text-left font-semibold;
+  }
+
+  .selectedCell::after {
+    @apply pointer-events-none absolute inset-0 bg-primary/10;
+    content: '';
+  }
+
+  .column-resize-handle {
+    @apply pointer-events-none absolute -right-px top-0 bottom-0 w-0.5 bg-primary;
+  }
+
+  &.resize-cursor {
+    cursor: ew-resize;
+  }
+
   /* Slash command decoration styles */
   .tiptop-slash-highlight {
     @apply rounded bg-divider/65 outline-[5.5px] outline-solid outline-divider/65;
@@ -268,4 +300,8 @@
 
 .ProseMirror-selectednode {
   @apply bg-primary-50 dark:bg-cyan-700 rounded-lg !outline-none;
+}
+
+.tiptop-editor-no-padding .ProseMirror {
+  @apply px-0 pt-0 pb-0;
 }

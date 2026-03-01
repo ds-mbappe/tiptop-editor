@@ -6,6 +6,7 @@ import SlashCommandList from './SlashCommandList'
 import { commandGroups } from '../../constants'
 import type { KeyDownRef, SlashCommandGroupCommandsProps, SlashCommandGroupProps } from '../../types'
 import type { SuggestionKeyDownProps, SuggestionProps } from '@tiptap/suggestion'
+import type { SlashCommandSuggestionOptions } from './SlashCommand'
 
 const updatePosition = (editor: Editor, element: HTMLElement) => {
   const virtualElement = {
@@ -24,7 +25,7 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
   })
 }
 
-export default {
+const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
   pluginKey: new PluginKey('slashCommand'),
 
   items: ({ query }: { query: string }) => {
@@ -93,7 +94,7 @@ export default {
           return true
         }
 
-        return reactRenderer.ref?.onKeyDown(props)
+        return reactRenderer.ref?.onKeyDown(props) || false
       },
 
       onExit() {
@@ -105,3 +106,5 @@ export default {
     }
   },
 }
+
+export default SlashCommandSuggestion

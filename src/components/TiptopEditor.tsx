@@ -3,9 +3,10 @@ import {
   useEditorState,
 } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { Card } from '@heroui/react'
+import { Card, cn } from '@heroui/react'
 import { EditorContent } from '@tiptap/react'
 import {
+  Fragment,
   forwardRef,
   useImperativeHandle,
   useMemo,
@@ -16,6 +17,7 @@ import SlashCommand from '../extensions/slashCommand/SlashCommand'
 import SlashCommandSuggestion from '../extensions/slashCommand/SlashCommandSuggestion'
 import { Placeholder } from '@tiptap/extensions'
 import { ListKit } from '@tiptap/extension-list'
+import { TableKit } from '@tiptap/extension-table'
 import { CodeBlock } from '../extensions/CodeBlock'
 import HorizontalRule from '../extensions/HorizontalRule'
 import { TextStyle, Color } from '@tiptap/extension-text-style'
@@ -29,13 +31,22 @@ import { TiptopEditorProps } from '../types'
 import TiptopEmoji from '../extensions/emoji/TiptopEmoji'
 import { ImageUploader } from '../extensions/image/ImageUploader'
 import ImageUploaderExtension from '../extensions/image/ImageUploaderExtension'
+import TableSelectionMenu from './TableSelectionMenu'
 
 export interface TiptopEditorHandle {
   getEditor: () => ReturnType<typeof useEditorState> | null
 }
 
 const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
-  ({ editorOptions = {}, ...rest }, ref) => {
+  ({ editorOptions = {}, className, ...rest }, ref) => {
+    const {
+      imgUploadUrl,
+      imgUploadResponseKey,
+      disableDefaultContainer = false,
+      showDragHandle = true,
+      ...tiptapEditorOptions
+    } = editorOptions
+
     // Serialized key for all options to force recreation
     const optionsKey = useMemo(() => 
       JSON.stringify({ ...editorOptions }), 
@@ -81,32 +92,47 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
         Subscript,
         Superscript,
         TiptopEmoji,
+        TableKit.configure({
+          table: {
+            resizable: true,
+          },
+        }),
         ImageUploader,
         ImageUploaderExtension.configure({
-          imgUploadUrl: editorOptions.imgUploadUrl,
-          imgUploadResponseKey: editorOptions.imgUploadResponseKey,
+          imgUploadUrl,
+          imgUploadResponseKey,
         }),
         SlashCommand.configure({
           suggestion: SlashCommandSuggestion
         }),
       ],
-      ...editorOptions,
+      ...tiptapEditorOptions,
     }, [optionsKey]) // We pass optionsKey as dependency array to useEditor
 
     useImperativeHandle(ref, () => ({
       getEditor: () => editor,
     }), [editor])
 
+    const Wrapper = disableDefaultContainer ? Fragment : Card
+    const wrapperProps = disableDefaultContainer
+      ? {}
+      : { className: 'w-full overflow-visible' }
+
     return (
-      <Card className="w-full overflow-visible">
+      <Wrapper {...wrapperProps}>
         {editor &&
           <>
-            <TiptopDragHandle editor={editor} />
+            {showDragHandle ? <TiptopDragHandle editor={editor} /> : null}
             <TextSelectionMenu editor={editor} />
+            <TableSelectionMenu editor={editor} />
           </>
         }
-        <EditorContent {...rest} editor={editor} />
-      </Card>
+        <EditorContent
+          {...rest}
+          className={cn(className, disableDefaultContainer ? 'tiptop-editor-no-padding' : null)}
+          editor={editor}
+        />
+      </Wrapper>
     )
   }
 )

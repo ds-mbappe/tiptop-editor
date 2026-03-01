@@ -153,6 +153,15 @@ export const commandGroups = [
           editor.chain().focus().deleteRange(range).insertImageUploader().run()
         },
       },
+      {
+        key: 'table',
+        title: 'Table',
+        icon: 'Table2',
+        description: '',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+        },
+      },
     ]
   }
 ]

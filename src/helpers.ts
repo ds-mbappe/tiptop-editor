@@ -1,5 +1,6 @@
 import { Editor, findParentNodeClosestToPos, isTextSelection } from '@tiptap/core';
 import { EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state';
+import { CellSelection } from '@tiptap/pm/tables';
 import { CodeBlock } from './extensions/CodeBlock';
 import HorizontalRule from './extensions/HorizontalRule';
 import type { SlashCommandGroupCommandsProps } from './types';
@@ -39,6 +40,10 @@ export const hasTextNodeInSelection = (editor: Editor): boolean => {
 
   return found;
 };
+
+export const isTableCellSelection = (editor: Editor) => {
+  return editor.state.selection instanceof CellSelection;
+}
 
 export const isForbiddenNodeSelected = (editor: Editor) => {
   const forbiddenNodes = [
@@ -311,6 +316,7 @@ export const transformNodeToAlternative = (editor: Editor, targetOption: SlashCo
       bulletList: () => editor.chain().focus().toggleBulletList().run(),
       orderedList: () => editor.chain().focus().toggleOrderedList().run(),
       taskList: () => editor.chain().focus().toggleTaskList().run(),
+      table: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
       // Horizontal rule - insert instead of transform
       horizontalRule: () => {
         // First clear the current node content, then insert HR
@@ -339,6 +345,15 @@ export const transformNodeToAlternative = (editor: Editor, targetOption: SlashCo
         .focus()
         .deleteRange({ from: pos, to: pos + node.nodeSize })
         .insertContent({ type: 'horizontalRule' })
+        .run()
+      return
+    }
+
+    if (targetOption.key === 'table') {
+      editor.chain()
+        .focus()
+        .deleteRange({ from: pos, to: pos + node.nodeSize })
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
         .run()
       return
     }
@@ -387,7 +402,7 @@ export const unsetLink = (editor: Editor) => {
   }
 }
 
-export const uploadWithProgress = async ({ file, url, onProgress, signal }: { file: File, url: string, onProgress: (percent: number) => boolean | void, signal?: AbortSignal }): Promise<{ url: string }> => {
+export const uploadWithProgress = async ({ file, url, onProgress, signal }: { file: File, url: string, onProgress: (percent: number) => boolean | void, signal?: AbortSignal }): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     
@@ -441,6 +456,18 @@ export const uploadWithProgress = async ({ file, url, onProgress, signal }: { fi
     xhr.open('POST', url)
     xhr.send(formData)
   })
+}
+
+export const getValueAtPath = (source: Record<string, unknown>, path: string | string[]) => {
+  const segments = Array.isArray(path) ? path : path.split('.').filter(Boolean)
+
+  return segments.reduce<unknown>((current, segment) => {
+    if (current == null || typeof current !== 'object') {
+      return undefined
+    }
+
+    return (current as Record<string, unknown>)[segment]
+  }, source)
 }
 
 export const generateUniqueId = () => {
