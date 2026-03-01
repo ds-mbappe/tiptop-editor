@@ -1,5 +1,5 @@
 import { HeroUIProvider, ToastProvider } from "@heroui/react"
-import TiptopEditor from "./components/TiptopEditor"
+import TiptopEditor from "./components/editor/TiptopEditor"
 
 function App() {
 

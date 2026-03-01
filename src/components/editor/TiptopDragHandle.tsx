@@ -3,13 +3,13 @@ import { Editor } from '@tiptap/react'
 import { Node } from '@tiptap/pm/model'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeSelection } from '@tiptap/pm/state'
-import Icon from './Icon'
+import Icon from '../ui/Icon'
 import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Kbd, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from '@heroui/react'
-import { commandGroups } from '../constants'
+import { commandGroups } from '../../constants'
 import type { icons } from 'lucide-react'
 import DragHandleColorList from './DragHandleColorList'
 import TransformIntoIcon from './TransformIntoIcon'
-import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, isUploadingImage, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../helpers'
+import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, isUploadingImage, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../../helpers'
 
 const excludedCommands = ['imageUploader'];
 

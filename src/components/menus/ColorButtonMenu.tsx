@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Popover, PopoverTrigger, Button, Tooltip, PopoverContent } from '@heroui/react';
 import type { Editor } from '@tiptap/react';
 import ColorButton from './ColorButton';
-import { colorSections } from '../constants';
+import { colorSections } from '../../constants';
 
 interface ColorButtonMenuProps {
   editor: Editor;

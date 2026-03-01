@@ -1,7 +1,7 @@
 import { Listbox, ListboxItem, ListboxSection } from '@heroui/react'
-import { colorSections } from '../constants'
+import { colorSections } from '../../constants'
 import type { Editor } from '@tiptap/react'
-import ColorIcon from './ColorIcon'
+import ColorIcon from '../ui/ColorIcon'
 
 const DragHandleColorList = ({ editor, onCloseMenu }: { editor: Editor, onCloseMenu: () => void }) => {
   const applyColor = (sectionKey: string, color: string) => {

@@ -8,8 +8,8 @@ import {
   Divider,
 } from '@heroui/react';
 import type { Editor } from '@tiptap/react';
-import EditorButton from './EditorButton';
-import Icon from './Icon';
+import EditorButton from '../ui/EditorButton';
+import Icon from '../ui/Icon';
 import type { icons } from 'lucide-react';
 
 interface MoreOptionsButtonMenuProps {

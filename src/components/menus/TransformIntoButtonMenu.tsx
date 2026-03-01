@@ -7,9 +7,9 @@ import {
   PopoverContent,
 } from '@heroui/react';
 import type { Editor } from '@tiptap/react';
-import Icon from './Icon';
+import Icon from '../ui/Icon';
 import { icons } from 'lucide-react';
-import { commandGroups } from '../constants';
+import { commandGroups } from '../../constants';
 
 interface TransformIntoButtonMenuProps {
   editor: Editor;

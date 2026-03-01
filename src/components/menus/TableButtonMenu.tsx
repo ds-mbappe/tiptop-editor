@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@heroui/react'
 import type { Editor } from '@tiptap/react'
-import Icon from './Icon'
+import Icon from '../ui/Icon'
 
 interface TableButtonMenuProps {
   editor: Editor

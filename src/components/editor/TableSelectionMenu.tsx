@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { BubbleMenu } from '@tiptap/react/menus'
-import TableButtonMenu from './TableButtonMenu'
-import { isTableCellSelection, isTextSelected } from '../helpers'
-import type { TextSelectionMenuProps } from '../types'
+import TableButtonMenu from '../menus/TableButtonMenu'
+import { isTableCellSelection, isTextSelected } from '../../helpers'
+import type { TextSelectionMenuProps } from '../../types'
 
 const TableSelectionMenu = ({ editor }: TextSelectionMenuProps) => {
   const shouldShow = useCallback(() => {

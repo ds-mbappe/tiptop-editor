@@ -7,7 +7,7 @@ import {
 import type { SlashCommandGroupProps, SlashCommandGroupCommandsProps, KeyDownRef } from '../../types';
 import { cn, Divider } from '@heroui/react';
 import { icons } from 'lucide-react';
-import Icon from '../../components/Icon';
+import Icon from '../../components/ui/Icon';
 
 const SlashCommandList = forwardRef<KeyDownRef, {
   items: SlashCommandGroupProps[];

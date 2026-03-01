@@ -1,6 +1,6 @@
 import { Tooltip, Button } from '@heroui/react'
 import { useEffect, useState, useCallback } from 'react'
-import type { EditorButtonProps } from '../types'
+import type { EditorButtonProps } from '../../types'
 import Icon from './Icon'
 import React from 'react'
 

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button, Tooltip } from '@heroui/react';
-import ColorIcon from './ColorIcon';
-import { ColorButtonProps } from '../types';
+import ColorIcon from '../ui/ColorIcon';
+import { ColorButtonProps } from '../../types';
 
 const ColorButton = ({
   editor,

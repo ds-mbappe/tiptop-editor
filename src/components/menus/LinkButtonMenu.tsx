@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Popover, PopoverTrigger, PopoverContent, Button, Tooltip, Divider } from '@heroui/react';
 import { Editor } from '@tiptap/react';
-import Icon from './Icon';
-import EditorButton from './EditorButton';
-import { addOrUpdateLink, unsetLink } from '../helpers';
+import Icon from '../ui/Icon';
+import EditorButton from '../ui/EditorButton';
+import { addOrUpdateLink, unsetLink } from '../../helpers';
 
 interface LinkButtonMenuProps {
   editor: Editor;

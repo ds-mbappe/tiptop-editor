@@ -1,7 +1,7 @@
 import { NodeViewProps } from '@tiptap/core'
 import { NodeViewWrapper } from '@tiptap/react'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Icon from '../../components/Icon'
+import Icon from '../../components/ui/Icon'
 import { Button, cn } from '@heroui/react'
 import { showToast } from '../../helpers'
 

@@ -6,7 +6,7 @@ import HorizontalRule from './extensions/HorizontalRule';
 import type { SlashCommandGroupCommandsProps } from './types';
 import { Node } from '@tiptap/pm/model';
 import { addToast } from '@heroui/react';
-import CloseIcon from './components/CloseIcon';
+import CloseIcon from './components/ui/CloseIcon';
 
 export const isTextSelected = (editor: Editor) => {
   const { state } = editor;

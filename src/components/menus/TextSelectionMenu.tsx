@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { Divider } from '@heroui/react';
-import EditorButton from './EditorButton';
+import EditorButton from '../ui/EditorButton';
 import LinkButtonMenu from './LinkButtonMenu';
 import ColorButtonMenu from './ColorButtonMenu';
 import MoreOptionsButtonMenu from './MoreOptionsButtonMenu';
 import TableButtonMenu from './TableButtonMenu';
 import { icons } from 'lucide-react';
-import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from '../helpers';
-import { TextSelectionMenuProps } from '../types';
+import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from '../../helpers';
+import { TextSelectionMenuProps } from '../../types';
 
 const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) => {
   const [isVisible, setIsVisible] = useState(false);
