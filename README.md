@@ -43,7 +43,7 @@ export function Editor() {
 }
 ```
 
-`editorOptions` accepts the same options as `useEditor` from `@tiptap/react`, except `extensions`, which is managed internally by the package.
+`editorOptions` accepts the same options as `useEditor` from `@tiptap/react`, except `extensions`, which is managed internally by the package. To add your own extensions, use `editorOptions.extraExtensions`.
 
 ## Editor Ref and Events
 
@@ -79,6 +79,99 @@ Available ref methods:
 - `off(event, callback?)`
 - `once(event, callback)`
 
+## Extending the Editor
+
+The package now supports two extension points:
+
+- `editorOptions.extraExtensions`
+  Appends custom Tiptap extensions after the built-in set.
+- `slots`
+  Lets you inject custom React UI around the editor and inside the selection menus.
+
+### Add custom Tiptap extensions
+
+```tsx
+import { Extension } from '@tiptap/core'
+import { TiptopEditor } from 'tiptop-editor'
+
+const MyExtension = Extension.create({
+  name: 'myExtension',
+})
+
+export function EditorWithExtraExtensions() {
+  return (
+    <TiptopEditor
+      editorOptions={{
+        immediatelyRender: false,
+        extraExtensions: [MyExtension],
+      }}
+    />
+  )
+}
+```
+
+`extraExtensions` is additive only. If you pass an extension with the same name as one of the built-in extensions, the editor will warn in the console and show a toast because duplicate extension names can lead to unstable behavior.
+
+### Add custom UI with slots
+
+Supported slots:
+
+- `editorTop`
+- `editorBottom`
+- `selectionMenuPrepend`
+- `selectionMenuAppend`
+- `tableMenuPrepend`
+- `tableMenuAppend`
+
+Each slot accepts either:
+
+- a React node
+- a render function receiving `{ editor }`
+
+```tsx
+<TiptopEditor
+  slots={{
+    editorTop: ({ editor }) => (
+      <button onClick={() => editor.chain().focus().insertContent('<p>Draft</p>').run()}>
+        Insert draft
+      </button>
+    ),
+  }}
+/>
+```
+
+### Use the editor context hook
+
+For slotted components, you can consume the current editor instance through `useTiptopEditor()` instead of passing `editor` down manually.
+
+```tsx
+import { TiptopEditor, useTiptopEditor } from 'tiptop-editor'
+
+function AiToolbar() {
+  const editor = useTiptopEditor()
+
+  if (!editor) {
+    return null
+  }
+
+  return (
+    <button onClick={() => editor.chain().focus().insertContent('<p>AI draft</p>').run()}>
+      Insert draft
+    </button>
+  )
+}
+
+export function EditorWithSlots() {
+  return (
+    <TiptopEditor
+      slots={{
+        editorTop: <AiToolbar />,
+      }}
+    />
+  )
+}
+```
+
 ## Custom Editor UI Options
 
 `TiptopEditor` also supports a few package-specific options inside `editorOptions`:
@@ -97,6 +190,8 @@ Available ref methods:
   Disables the default HeroUI `Card` wrapper and removes the editor's built-in padding. Use this when you want the editor to live inside your own container/layout.
 - `showDragHandle`
   Controls whether the block drag handle is rendered. Default: `true`.
+- `extraExtensions`
+  Appends custom Tiptap extensions after the built-in editor set.
 
 ## Built-in Extensions
 
@@ -242,7 +337,7 @@ Example:
 ## Notes
 
 - If you use SSR, keep `immediatelyRender: false`.
-- The package manages the editor extensions internally, so custom `extensions` are intentionally not accepted yet.
+- The package manages the built-in editor extensions internally. Use `editorOptions.extraExtensions` to append your own feature extensions.
 
 ## Feedback
 

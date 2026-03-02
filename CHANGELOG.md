@@ -4,6 +4,27 @@
 
 - Nothing yet.
 
+## 1.3.0 - 2026-03-02
+
+Diff baseline: `v1.2.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Added
+
+- Added `editorOptions.extraExtensions` so consumers can append custom Tiptap extensions without replacing the built-in editor setup.
+- Added a `slots` API for injecting custom React UI above or below the editor and into text/table selection menus.
+- Added `TiptopEditorContext` and `useTiptopEditor()` for slotted components that need access to the current editor instance.
+- Added duplicate-extension detection for `extraExtensions`, with both a console warning and a toast notification when a consumer re-registers a built-in extension name.
+- Added Storybook coverage for the slot-based customization path.
+
+### Changed
+
+- Refactored `TiptopEditor` internals to separate default extension creation, slot rendering, and duplicate-extension warnings into dedicated editor helpers.
+- Updated README documentation to cover `extraExtensions`, slots, and the editor context hook.
+
 ## 1.2.0 - 2026-03-02
 
 Diff baseline: `v1.1.0`

@@ -1,3 +1,4 @@
+import type { Extensions } from "@tiptap/core"
 import type { Editor, EditorContentProps, Range, UseEditorOptions } from "@tiptap/react"
 import type { icons } from "lucide-react"
 
@@ -32,6 +33,12 @@ export type TiptopEditorOptions = Omit<Partial<UseEditorOptions & {
  * @default true
  */
   showDragHandle?: boolean
+  /**
+ * Additional Tiptap extensions to append after the built-in editor set.
+ * Use this to add feature-specific extensions like AI commands or collaboration.
+ * @default undefined
+ */
+  extraExtensions?: Extensions
 }>, 'extensions'>
 
 export interface EditorButtonProps {
@@ -70,6 +77,7 @@ export type TiptopEditorProps = Omit<EditorContentProps, 'editor'> & {
  * implementation.
  */
   editorOptions?: TiptopEditorOptions
+  slots?: TiptopEditorSlots
 }
 
 export interface ColorButtonProps {
@@ -86,6 +94,23 @@ export interface TextSelectionMenuProps {
   editor: Editor;
   prepend?: React.ReactNode;
   append?: React.ReactNode;
+}
+
+export interface TiptopEditorSlotProps {
+  editor: Editor
+}
+
+export type TiptopEditorSlot =
+  | React.ReactNode
+  | ((props: TiptopEditorSlotProps) => React.ReactNode)
+
+export interface TiptopEditorSlots {
+  editorTop?: TiptopEditorSlot
+  editorBottom?: TiptopEditorSlot
+  selectionMenuPrepend?: TiptopEditorSlot
+  selectionMenuAppend?: TiptopEditorSlot
+  tableMenuPrepend?: TiptopEditorSlot
+  tableMenuAppend?: TiptopEditorSlot
 }
 
 export interface TiptopEditorHandle {

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Button } from '@heroui/react'
 import TiptopEditor from './TiptopEditor'
+import { useTiptopEditor } from './TiptopEditorContext'
 
 const defaultContent = `
   <h1>Tiptop Editor</h1>
@@ -39,6 +41,61 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+const AiToolbar = () => {
+  const editor = useTiptopEditor()
+
+  if (!editor) {
+    return null
+  }
+
+  return (
+    <div className="mb-4 flex items-center justify-between rounded-2xl border border-divider bg-background/80 px-4 py-3">
+      <div>
+        <p className="text-sm font-semibold text-foreground">AI controls</p>
+        <p className="text-xs text-foreground-500">Example custom UI using the editor context hook.</p>
+      </div>
+
+      <Button
+        size="sm"
+        color="primary"
+        variant="flat"
+        onPress={() => {
+          editor.chain().focus().insertContent('<p>AI inserted this paragraph.</p>').run()
+        }}
+      >
+        Insert Draft
+      </Button>
+    </div>
+  )
+}
+
+const AiRewriteButton = () => {
+  const editor = useTiptopEditor()
+
+  if (!editor) {
+    return null
+  }
+
+  return (
+    <Button
+      size="sm"
+      color="primary"
+      variant="light"
+      onPress={() => {
+        const text = editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, ' ')
+
+        if (!text) {
+          return
+        }
+
+        editor.chain().focus().insertContent(` ${text.toUpperCase()}`).run()
+      }}
+    >
+      AI Rewrite
+    </Button>
+  )
+}
+
 export const Default: Story = {}
 
 export const Frameless: Story = {
@@ -55,4 +112,17 @@ export const Frameless: Story = {
       <TiptopEditor {...args} />
     </div>
   ),
+}
+
+export const WithSlots: Story = {
+  args: {
+    editorOptions: {
+      content: defaultContent,
+      immediatelyRender: false,
+    },
+    slots: {
+      editorTop: <AiToolbar />,
+      selectionMenuAppend: <AiRewriteButton />,
+    },
+  },
 }

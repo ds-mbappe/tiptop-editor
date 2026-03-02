@@ -1,111 +1,73 @@
-import {
-  useEditor,
-} from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
 import { Card, cn } from '@heroui/react'
-import { EditorContent } from '@tiptap/react'
-import {
-  Fragment,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-} from 'react'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { Fragment, forwardRef, useImperativeHandle, useMemo } from 'react'
 import TextSelectionMenu from '../menus/TextSelectionMenu'
+import { TiptopEditorHandle, TiptopEditorProps } from '../../types'
+import TableSelectionMenu from './TableSelectionMenu'
 import TiptopDragHandle from './TiptopDragHandle'
-import SlashCommand from '../../extensions/slashCommand/SlashCommand'
-import SlashCommandSuggestion from '../../extensions/slashCommand/SlashCommandSuggestion'
-import { Placeholder } from '@tiptap/extensions'
-import { ListKit } from '@tiptap/extension-list'
-import { TableKit } from '@tiptap/extension-table'
-import { CodeBlock } from '../../extensions/CodeBlock'
-import HorizontalRule from '../../extensions/HorizontalRule'
-import { TextStyle, Color } from '@tiptap/extension-text-style'
-import Highlight from '@tiptap/extension-highlight'
-import TextAlign from '@tiptap/extension-text-align'
-import Subscript from '@tiptap/extension-subscript'
-import Superscript from '@tiptap/extension-superscript'
+import { TiptopEditorContext } from './TiptopEditorContext'
+import { createDefaultExtensions } from './createDefaultExtensions'
+import { renderTiptopSlot } from './renderTiptopSlot'
+import { useDuplicateExtensionWarnings } from './useDuplicateExtensionWarnings'
 
 import 'prosemirror-view/style/prosemirror.css'
-import {
-  TiptopEditorHandle,
-  TiptopEditorProps,
-} from '../../types'
-import TiptopEmoji from '../../extensions/emoji/TiptopEmoji'
-import { ImageUploader } from '../../extensions/image/ImageUploader'
-import ImageUploaderExtension from '../../extensions/image/ImageUploaderExtension'
-import TableSelectionMenu from './TableSelectionMenu'
+
+const serializeEditorOptions = (value: unknown) => JSON.stringify(value, (_key, currentValue) => {
+  if (typeof currentValue === 'function') {
+    return '[function]'
+  }
+
+  return currentValue
+})
 
 const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
-  ({ editorOptions = {}, className, ...rest }, ref) => {
+  ({ editorOptions = {}, slots = {}, className, ...rest }, ref) => {
     const {
       imgUploadUrl,
       imgUploadResponseKey,
       disableDefaultContainer = false,
       showDragHandle = true,
+      extraExtensions = [],
       ...tiptapEditorOptions
     } = editorOptions
 
-    // Serialized key for all options to force recreation
-    const optionsKey = useMemo(() => 
-      JSON.stringify({ ...editorOptions }), 
-      [editorOptions]
+    const builtInExtensions = useMemo(
+      () => createDefaultExtensions({ imgUploadUrl, imgUploadResponseKey }),
+      [imgUploadResponseKey, imgUploadUrl]
     )
+
+    const extensions = useMemo(() => [
+      ...builtInExtensions,
+      ...extraExtensions,
+    ], [builtInExtensions, extraExtensions])
+
+    useDuplicateExtensionWarnings(builtInExtensions, extraExtensions)
+
+    const optionsKey = useMemo(() => serializeEditorOptions(tiptapEditorOptions), [tiptapEditorOptions])
+    const extraExtensionsKey = useMemo(() => serializeEditorOptions(
+      extraExtensions.map(extension => ({
+        name: extension.name,
+        options: 'options' in extension ? extension.options : undefined,
+      }))
+    ), [extraExtensions])
+
+    const editorDependencies = useMemo(() => [
+      optionsKey,
+      extraExtensionsKey,
+      imgUploadUrl,
+      imgUploadResponseKey,
+    ], [
+      extraExtensionsKey,
+      imgUploadResponseKey,
+      imgUploadUrl,
+      optionsKey,
+    ])
 
     const editor = useEditor({
       content: '<p>This is just a content</p>',
-      extensions: [
-        StarterKit.configure({
-          bulletList: false,
-          orderedList: false,
-          listItem: false,
-          listKeymap: false,
-          codeBlock: false,
-          heading: {
-            levels: [1, 2, 3]
-          },
-          horizontalRule: false,
-          link: {
-            openOnClick: false,
-            defaultProtocol: 'https'
-          },
-          dropcursor: {
-            width: 1.5,
-            color: 'hsl(var(--heroui-primary))',
-          }
-        }),
-        ListKit,
-        Placeholder.configure({
-          placeholder: "Write something, or type '/' for commands.",
-        }),
-        HorizontalRule,
-        CodeBlock,
-        TextStyle,
-        Color,
-        Highlight.configure({
-          multicolor: true,
-        }),
-        TextAlign.configure({
-          types: ['paragraph', 'heading']
-        }),
-        Subscript,
-        Superscript,
-        TiptopEmoji,
-        TableKit.configure({
-          table: {
-            resizable: true,
-          },
-        }),
-        ImageUploader,
-        ImageUploaderExtension.configure({
-          imgUploadUrl,
-          imgUploadResponseKey,
-        }),
-        SlashCommand.configure({
-          suggestion: SlashCommandSuggestion
-        }),
-      ],
+      extensions,
       ...tiptapEditorOptions,
-    }, [optionsKey]) // We pass optionsKey as dependency array to useEditor
+    }, editorDependencies)
 
     useImperativeHandle(ref, () => ({
       getEditor: () => editor,
@@ -129,20 +91,32 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       : { className: 'w-full overflow-visible' }
 
     return (
-      <Wrapper {...wrapperProps}>
-        {editor &&
-          <>
-            {showDragHandle ? <TiptopDragHandle editor={editor} /> : null}
-            <TextSelectionMenu editor={editor} />
-            <TableSelectionMenu editor={editor} />
-          </>
-        }
-        <EditorContent
-          {...rest}
-          className={cn(className, disableDefaultContainer ? 'tiptop-editor-no-padding' : null)}
-          editor={editor}
-        />
-      </Wrapper>
+      <TiptopEditorContext.Provider value={editor}>
+        <Wrapper {...wrapperProps}>
+          {renderTiptopSlot(slots.editorTop, editor)}
+          {editor &&
+            <>
+              {showDragHandle ? <TiptopDragHandle editor={editor} /> : null}
+              <TextSelectionMenu
+                editor={editor}
+                prepend={renderTiptopSlot(slots.selectionMenuPrepend, editor)}
+                append={renderTiptopSlot(slots.selectionMenuAppend, editor)}
+              />
+              <TableSelectionMenu
+                editor={editor}
+                prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
+                append={renderTiptopSlot(slots.tableMenuAppend, editor)}
+              />
+            </>
+          }
+          <EditorContent
+            {...rest}
+            className={cn(className, disableDefaultContainer ? 'tiptop-editor-no-padding' : null)}
+            editor={editor}
+          />
+          {renderTiptopSlot(slots.editorBottom, editor)}
+        </Wrapper>
+      </TiptopEditorContext.Provider>
     )
   }
 )
