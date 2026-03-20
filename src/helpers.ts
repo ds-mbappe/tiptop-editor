@@ -1,10 +1,11 @@
 import { Editor, findParentNodeClosestToPos, isTextSelection } from '@tiptap/core';
+import type { JSONContent } from '@tiptap/core';
 import { EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state';
 import { CellSelection } from '@tiptap/pm/tables';
 import { CodeBlock } from './extensions/CodeBlock';
 import HorizontalRule from './extensions/HorizontalRule';
-import type { SlashCommandGroupCommandsProps } from './types';
-import { Node } from '@tiptap/pm/model';
+import type { DocumentMap, DocumentNode, DocumentWord, SlashCommandGroupCommandsProps, TargetedUpdate, TargetedUpdateReplacement } from './types';
+import { Fragment, Node } from '@tiptap/pm/model';
 import { addToast } from '@heroui/react';
 import CloseIcon from './components/ui/CloseIcon';
 
@@ -529,4 +530,196 @@ export const getUploaderAtPos = (state: Editor['state'], pos: number) => {
   const $pos = state.doc.resolve(Math.max(0, Math.min(pos, state.doc.content.size)))
   return findParentNodeClosestToPos($pos, n => n.type.name === 'imageUploader')
   // returns { pos, depth, start, node } | null
+}
+
+// ---------------------------------------------------------------------------
+// Targeted update helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Build a DocumentNode from a ProseMirror block node.
+ * `absFrom` is the absolute position of the block's opening tag in the document.
+ */
+function buildDocumentNode(doc: Node, blockNode: Node, absFrom: number, index: number): DocumentNode {
+  const absTo = absFrom + blockNode.nodeSize
+  const text = blockNode.textContent
+
+  // Map every character in the block's text to its absolute ProseMirror position.
+  // We walk only text nodes so non-text inline atoms (e.g. hard breaks) are skipped.
+  const charMap: number[] = []
+  doc.nodesBetween(absFrom + 1, absTo - 1, (node, pos) => {
+    if (node.isText && node.text) {
+      for (let i = 0; i < node.text.length; i++) {
+        charMap.push(pos + i)
+      }
+    }
+    return true
+  })
+
+  const words: DocumentWord[] = []
+  const wordRegex = /\S+/g
+  let match: RegExpExecArray | null
+  while ((match = wordRegex.exec(text)) !== null) {
+    const charStart = match.index
+    const charEnd = match.index + match[0].length
+    words.push({
+      index: words.length,
+      text: match[0],
+      // Fall back to a simple offset estimate when the charMap is shorter than
+      // expected (e.g. the block contains non-text inline atoms).
+      absFrom: charMap[charStart] ?? absFrom + 1 + charStart,
+      absTo: charMap[charEnd - 1] !== undefined
+        ? charMap[charEnd - 1] + 1
+        : absFrom + 1 + charEnd,
+    })
+  }
+
+  return { index, type: blockNode.type.name, text, absFrom, absTo, words, charMap }
+}
+
+/**
+ * Returns a structured snapshot of every top-level block in the editor.
+ * Send this to your AI model so it can reference nodes and words by index.
+ */
+export const getDocumentMap = (editor: Editor): DocumentMap => {
+  const { doc } = editor.state
+  const nodes: DocumentNode[] = []
+  doc.forEach((blockNode, offset, index) => {
+    nodes.push(buildDocumentNode(doc, blockNode, offset, index))
+  })
+  return { nodes }
+}
+
+/**
+ * Resolve a TargetedUpdate to absolute ProseMirror `[from, to)` positions.
+ */
+function resolveUpdateRange(
+  docMap: DocumentMap,
+  update: TargetedUpdate,
+): { absFrom: number; absTo: number } | null {
+  const targetNode = update.nodeIndex !== undefined
+    ? docMap.nodes[update.nodeIndex]
+    : undefined
+
+  if (!targetNode) return null
+
+  if (update.wordIndex !== undefined) {
+    const word = targetNode.words[update.wordIndex]
+    if (!word) return null
+    return { absFrom: word.absFrom, absTo: word.absTo }
+  }
+
+  if (update.wordRange !== undefined) {
+    const [startIdx, endIdx] = update.wordRange
+    const startWord = targetNode.words[startIdx]
+    const endWord = targetNode.words[endIdx]
+    if (!startWord || !endWord) return null
+    return { absFrom: startWord.absFrom, absTo: endWord.absTo }
+  }
+
+  if (update.charFrom !== undefined && update.charTo !== undefined) {
+    const absFrom = targetNode.charMap[update.charFrom] ?? targetNode.absFrom + 1 + update.charFrom
+    const absTo = update.charTo > 0 && targetNode.charMap[update.charTo - 1] !== undefined
+      ? targetNode.charMap[update.charTo - 1] + 1
+      : targetNode.absFrom + 1 + update.charTo
+    return { absFrom, absTo }
+  }
+
+  // No sub-selection → target the full text content of the block.
+  return { absFrom: targetNode.absFrom + 1, absTo: targetNode.absTo - 1 }
+}
+
+/**
+ * Build a ProseMirror Fragment from replacement content.
+ *
+ * - For a `string` replacement the marks active at `absFrom` in the original
+ *   document are carried over, so bold/italic/color etc. are preserved.
+ * - For a `JSONContent[]` replacement the caller supplies explicit marks via
+ *   the JSON structure.
+ *
+ * Returns `null` when the replacement is empty (signals a deletion).
+ */
+function buildReplacementFragment(
+  editor: Editor,
+  absFrom: number,
+  replacement: TargetedUpdateReplacement,
+): Fragment | null {
+  const { schema, doc } = editor.state
+
+  if (typeof replacement === 'string') {
+    if (!replacement) return null
+    const marks = doc.resolve(absFrom).marks()
+    return Fragment.from(schema.text(replacement, marks.length ? marks : undefined))
+  }
+
+  if (!replacement.length) return null
+  const nodes = (replacement as JSONContent[]).map(nodeJSON => schema.nodeFromJSON(nodeJSON))
+  return Fragment.from(nodes)
+}
+
+/**
+ * Applies a single targeted content update.
+ *
+ * @example
+ * // Translate the first word of the second paragraph
+ * applyTargetedUpdate(editor, { nodeIndex: 1, wordIndex: 0, replacement: 'Bonjour' })
+ */
+export const applyTargetedUpdate = (editor: Editor, update: TargetedUpdate): boolean => {
+  const docMap = getDocumentMap(editor)
+  const range = resolveUpdateRange(docMap, update)
+  if (!range) return false
+
+  const content = buildReplacementFragment(editor, range.absFrom, update.replacement)
+  const tr = content
+    ? editor.state.tr.replaceWith(range.absFrom, range.absTo, content)
+    : editor.state.tr.delete(range.absFrom, range.absTo)
+
+  editor.view.dispatch(tr)
+  return true
+}
+
+/**
+ * Applies multiple targeted updates in a single atomic ProseMirror transaction.
+ *
+ * All positions are resolved against the document state *before* any mutations,
+ * then applied from the bottom of the document upward so that earlier replacements
+ * never shift the absolute positions of later ones.
+ *
+ * @example
+ * // Bold-ify two specific words in one go
+ * applyTargetedUpdates(editor, [
+ *   { nodeIndex: 0, wordIndex: 2, replacement: [{ type: 'text', text: 'foo', marks: [{ type: 'bold' }] }] },
+ *   { nodeIndex: 2, wordRange: [0, 1], replacement: 'Hello world' },
+ * ])
+ */
+export const applyTargetedUpdates = (editor: Editor, updates: TargetedUpdate[]): boolean => {
+  if (updates.length === 0) return true
+  if (updates.length === 1) return applyTargetedUpdate(editor, updates[0])
+
+  // Resolve all positions against the current (unmodified) document.
+  const docMap = getDocumentMap(editor)
+  type Resolved = { absFrom: number; absTo: number; replacement: TargetedUpdateReplacement }
+  const resolved: Resolved[] = []
+
+  for (const update of updates) {
+    const range = resolveUpdateRange(docMap, update)
+    if (range) resolved.push({ ...range, replacement: update.replacement })
+  }
+
+  if (resolved.length === 0) return false
+
+  // Sort descending by position: apply bottom-to-top so positions above each
+  // replacement site are never affected by the replacements below them.
+  resolved.sort((a, b) => b.absFrom - a.absFrom)
+
+  let tr = editor.state.tr
+  for (const r of resolved) {
+    const content = buildReplacementFragment(editor, r.absFrom, r.replacement)
+    tr = content
+      ? tr.replaceWith(r.absFrom, r.absTo, content)
+      : tr.delete(r.absFrom, r.absTo)
+  }
+
+  editor.view.dispatch(tr)
+  return true
 }

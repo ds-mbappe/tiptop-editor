@@ -9,6 +9,8 @@ import { TiptopEditorContext } from './TiptopEditorContext'
 import { createDefaultExtensions } from './createDefaultExtensions'
 import { renderTiptopSlot } from './renderTiptopSlot'
 import { useDuplicateExtensionWarnings } from './useDuplicateExtensionWarnings'
+import { getDocumentMap, applyTargetedUpdate, applyTargetedUpdates } from '../../helpers'
+import type { TargetedUpdate } from '../../types'
 
 import 'prosemirror-view/style/prosemirror.css'
 
@@ -83,6 +85,9 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
         editor?.once(...args)
         return editor as NonNullable<typeof editor>
       }) as TiptopEditorHandle['once'],
+      getDocumentMap: () => editor ? getDocumentMap(editor) : null,
+      applyTargetedUpdate: (update: TargetedUpdate) => editor ? applyTargetedUpdate(editor, update) : false,
+      applyTargetedUpdates: (updates: TargetedUpdate[]) => editor ? applyTargetedUpdates(editor, updates) : false,
     }), [editor])
 
     const Wrapper = disableDefaultContainer ? Fragment : Card
