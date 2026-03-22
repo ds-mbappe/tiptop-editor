@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.4.0 - 2026-03-22
+
+Diff baseline: `v1.3.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Changed
+
+- Hide drag handle and text/table selection menus when the editor is in read-only mode (`editable: false`).
+
 ## 1.3.0 - 2026-03-02
 
 Diff baseline: `v1.2.0`
