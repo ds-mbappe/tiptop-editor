@@ -101,17 +101,23 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
           {renderTiptopSlot(slots.editorTop, editor)}
           {editor &&
             <>
-              {showDragHandle ? <TiptopDragHandle editor={editor} /> : null}
-              <TextSelectionMenu
-                editor={editor}
-                prepend={renderTiptopSlot(slots.selectionMenuPrepend, editor)}
-                append={renderTiptopSlot(slots.selectionMenuAppend, editor)}
-              />
-              <TableSelectionMenu
-                editor={editor}
-                prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
-                append={renderTiptopSlot(slots.tableMenuAppend, editor)}
-              />
+              {(showDragHandle && tiptapEditorOptions.editable) ? <TiptopDragHandle editor={editor} /> : null}
+
+              {tiptapEditorOptions.editable ?
+                <>
+                  <TextSelectionMenu
+                    editor={editor}
+                    prepend={renderTiptopSlot(slots.selectionMenuPrepend, editor)}
+                    append={renderTiptopSlot(slots.selectionMenuAppend, editor)}
+                  />
+                  <TableSelectionMenu
+                    editor={editor}
+                    prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
+                    append={renderTiptopSlot(slots.tableMenuAppend, editor)}
+                  />
+                </> :
+                null
+              }
             </>
           }
           <EditorContent
