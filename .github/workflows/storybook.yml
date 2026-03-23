@@ -25,11 +25,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: npm
+
 
       - uses: actions/configure-pages@v5
 
-      - run: npm ci
+      - run: npm install
       - run: npm run build-storybook
 
       - uses: actions/upload-pages-artifact@v3
