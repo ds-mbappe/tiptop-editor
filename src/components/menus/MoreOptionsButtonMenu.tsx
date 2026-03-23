@@ -91,24 +91,26 @@ const MoreOptionsButtonMenu = ({ editor }: MoreOptionsButtonMenuProps) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
-        <Button
-          size="sm"
-          data-active={isActive}
-          color="default"
-          variant="light"
-          isIconOnly
-          isDisabled={false}
-          aria-label="More options"
-          className="text-foreground-500 hover:text-foreground
-            data-[active=true]:bg-divider/45 data-[active=true]:text-primary
-            data-[active=true]:hover:bg-divider/45 data-[active=true]:hover:text-foreground"
-        >
-          <Tooltip content="More options" delay={250} closeDelay={0}>
-            <div className="w-full h-full flex items-center justify-center">
-              <Icon name="EllipsisVertical" />
-            </div>
-          </Tooltip>
-        </Button>
+        <div className="flex items-center gap-0.5">
+          <Button
+            size="sm"
+            data-active={isActive}
+            color="default"
+            variant="light"
+            isIconOnly
+            isDisabled={false}
+            aria-label="More options"
+            className="text-foreground-500 hover:text-foreground
+              data-[active=true]:bg-divider/45 data-[active=true]:text-primary
+              data-[active=true]:hover:bg-divider/45 data-[active=true]:hover:text-foreground"
+          >
+            <Tooltip content="More options" delay={250} closeDelay={0}>
+              <div className="w-full h-full flex items-center justify-center">
+                <Icon name="EllipsisVertical" />
+              </div>
+            </Tooltip>
+          </Button>
+        </div>
       </PopoverTrigger>
 
       <PopoverContent className="p-1.5">

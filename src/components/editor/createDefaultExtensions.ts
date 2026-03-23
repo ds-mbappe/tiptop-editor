@@ -43,7 +43,7 @@ export const createDefaultExtensions = ({
     dropcursor: {
       width: 1.5,
       color: 'hsl(var(--heroui-primary))',
-    }
+    },
   }),
   ListKit,
   Placeholder.configure({

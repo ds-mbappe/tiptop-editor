@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.5.0 - 2026-03-23
+
+Diff baseline: `v1.4.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- Wrapped toolbar buttons in a container div in `ColorButtonMenu`, `LinkButtonMenu`, and `MoreOptionsButtonMenu` to fix buttons not going behind content when scrolling.
+
 ## 1.4.0 - 2026-03-22
 
 Diff baseline: `v1.3.0`

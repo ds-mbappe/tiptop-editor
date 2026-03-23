@@ -5,7 +5,7 @@ function App() {
 
   return (
     <HeroUIProvider>
-      <TiptopEditor />
+      <TiptopEditor editorOptions={{ editable: true }} />
       <ToastProvider placement="top-right" />
     </HeroUIProvider>
   )
