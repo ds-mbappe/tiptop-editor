@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.6.2 - 2026-03-23
+
+Diff baseline: `v1.6.1`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- Removed wrapper `div` from `PopoverTrigger` in `ColorButtonMenu` and `MoreOptionsButtonMenu`, using `Button` directly as the trigger to fix popover rendering issues.
+
 ## 1.6.1 - 2026-03-23
 
 Diff baseline: `v1.6.0`
