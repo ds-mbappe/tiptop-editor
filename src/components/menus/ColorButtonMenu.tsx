@@ -38,7 +38,7 @@ const ColorButtonMenu = ({ editor }: ColorButtonMenuProps) => {
   return (
     <Popover placement="bottom">
       <PopoverTrigger>
-        <div className="z-1 flex items-center gap-0.5">
+        <div className="z-2 flex items-center gap-0.5">
           <Button
             size="sm"
             color="default"
