@@ -71,7 +71,7 @@ const LinkButtonMenu = ({ editor }: LinkButtonMenuProps) => {
       onOpenChange={setMenuOpened}
     >
       <PopoverTrigger>
-        <div className="flex items-center gap-0.5">
+        <div className="z-1 flex items-center gap-0.5">
           <Button
             size="sm"
             data-active={isActive}

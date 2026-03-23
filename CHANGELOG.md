@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.6.0 - 2026-03-23
+
+Diff baseline: `v1.5.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- Added `z-1` to popover trigger wrappers in `ColorButtonMenu`, `LinkButtonMenu`, and `MoreOptionsButtonMenu` to fix selection menu popovers rendering behind editor content.
+
 ## 1.5.0 - 2026-03-23
 
 Diff baseline: `v1.4.0`
