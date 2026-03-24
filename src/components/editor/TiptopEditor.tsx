@@ -1,6 +1,6 @@
 import { Card, cn } from '@heroui/react'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { Fragment, forwardRef, useImperativeHandle, useMemo } from 'react'
+import { Fragment, forwardRef, useEffect, useImperativeHandle, useMemo } from 'react'
 import TextSelectionMenu from '../menus/TextSelectionMenu'
 import { TiptopEditorHandle, TiptopEditorProps } from '../../types'
 import TableSelectionMenu from './TableSelectionMenu'
@@ -30,6 +30,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       disableDefaultContainer = false,
       showDragHandle = true,
       extraExtensions = [],
+      editable,
       ...tiptapEditorOptions
     } = editorOptions
 
@@ -68,8 +69,15 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
     const editor = useEditor({
       content: '<p>This is just a content</p>',
       extensions,
+      editable: editable ?? true,
       ...tiptapEditorOptions,
     }, editorDependencies)
+
+    useEffect(() => {
+      if (editor && editable !== undefined) {
+        editor.setEditable(editable)
+      }
+    }, [editor, editable])
 
     useImperativeHandle(ref, () => ({
       getEditor: () => editor,
@@ -101,23 +109,18 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
           {renderTiptopSlot(slots.editorTop, editor)}
           {editor &&
             <>
-              {(showDragHandle && tiptapEditorOptions.editable) ? <TiptopDragHandle editor={editor} /> : null}
+              {showDragHandle && editor.isEditable ? <TiptopDragHandle editor={editor} /> : null}
 
-              {tiptapEditorOptions.editable ?
-                <>
-                  <TextSelectionMenu
-                    editor={editor}
-                    prepend={renderTiptopSlot(slots.selectionMenuPrepend, editor)}
-                    append={renderTiptopSlot(slots.selectionMenuAppend, editor)}
-                  />
-                  <TableSelectionMenu
-                    editor={editor}
-                    prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
-                    append={renderTiptopSlot(slots.tableMenuAppend, editor)}
-                  />
-                </> :
-                null
-              }
+              <TextSelectionMenu
+                editor={editor}
+                prepend={renderTiptopSlot(slots.selectionMenuPrepend, editor)}
+                append={renderTiptopSlot(slots.selectionMenuAppend, editor)}
+              />
+              <TableSelectionMenu
+                editor={editor}
+                prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
+                append={renderTiptopSlot(slots.tableMenuAppend, editor)}
+              />
             </>
           }
           <EditorContent
