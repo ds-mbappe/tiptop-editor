@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.6.3 - 2026-03-24
+
+Diff baseline: `v1.6.2`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- Fixed `NotFoundError: removeChild` crash when toggling between edit and view mode. Extracted `editable` from editor options so changing it no longer triggers editor recreation. `TextSelectionMenu` and `TableSelectionMenu` are now kept mounted at all times — `BubbleMenu` already suppresses itself when the editor is not editable, so there is no visual change in view mode.
+
 ## 1.6.2 - 2026-03-23
 
 Diff baseline: `v1.6.1`
