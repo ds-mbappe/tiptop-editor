@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.6.4 - 2026-03-24
+
+Diff baseline: `v1.6.3`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- Fixed `NotFoundError: removeChild` crash caused by `TiptopDragHandle` unmounting while the `DragHandlePlugin` had already moved its DOM element to a separate wrapper outside React's tree. All three overlay components (`TiptopDragHandle`, `TextSelectionMenu`, `TableSelectionMenu`) are now kept permanently mounted for the lifetime of the editor — each handles its own visibility based on editor state.
+
 ## 1.6.3 - 2026-03-24
 
 Diff baseline: `v1.6.2`
