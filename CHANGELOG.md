@@ -4,6 +4,18 @@
 
 - Nothing yet.
 
+## 1.6.5 - 2026-03-24
+
+Diff baseline: `v1.6.4`
+
+### Breaking Changes
+
+- None identified.
+
+### Fixed
+
+- `TextSelectionMenu` and `TableSelectionMenu` no longer appear in view mode when text is selected. Added `editor.isEditable` guard to both `shouldShow` callbacks.
+
 ## 1.6.4 - 2026-03-24
 
 Diff baseline: `v1.6.3`

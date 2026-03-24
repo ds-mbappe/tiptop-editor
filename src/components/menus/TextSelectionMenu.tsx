@@ -28,7 +28,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   );
 
   const shouldShow = useCallback(() => {
-    return isTextSelected(editor) && hasTextNodeInSelection(editor) && !isForbiddenNodeSelected(editor);
+    return editor.isEditable && isTextSelected(editor) && hasTextNodeInSelection(editor) && !isForbiddenNodeSelected(editor);
   }, [editor]);
 
   const handleShow = useCallback(() => {

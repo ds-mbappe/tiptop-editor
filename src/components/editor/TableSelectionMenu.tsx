@@ -7,7 +7,7 @@ import type { TextSelectionMenuProps } from '../../types'
 
 const TableSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) => {
   const shouldShow = useCallback(() => {
-    return editor.isActive('table') && (isTableCellSelection(editor) || !isTextSelected(editor))
+    return editor.isEditable && editor.isActive('table') && (isTableCellSelection(editor) || !isTextSelected(editor))
   }, [editor])
 
   return (
