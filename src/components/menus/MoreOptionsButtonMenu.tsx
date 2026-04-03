@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  Popover,
-  PopoverTrigger,
-  Button,
-  Tooltip,
-  PopoverContent,
-  Divider,
-} from '@heroui/react';
+import { Popover, Button, Separator, Tooltip } from '@heroui/react';
 import type { Editor } from '@tiptap/react';
 import EditorButton from '../ui/EditorButton';
 import Icon from '../ui/Icon';
@@ -89,60 +82,62 @@ const MoreOptionsButtonMenu = ({ editor }: MoreOptionsButtonMenuProps) => {
   );
 
   return (
-    <Popover placement="bottom">
-      <PopoverTrigger>
+    <Tooltip delay={250} closeDelay={0}>
+      <Popover>
         <Button
           size="sm"
           data-active={isActive}
-          color="default"
-          variant="light"
+          variant="ghost"
           isIconOnly
           isDisabled={false}
           aria-label="More options"
-          className="text-foreground-500 hover:text-foreground
-            data-[active=true]:bg-divider/45 data-[active=true]:text-primary
-            data-[active=true]:hover:bg-divider/45 data-[active=true]:hover:text-foreground"
+          className="text-muted hover:text-foreground
+            data-[active=true]:bg-default/45 data-[active=true]:text-accent
+            data-[active=true]:hover:bg-default/45 data-[active=true]:hover:text-foreground"
         >
-          <Tooltip content="More options" delay={250} closeDelay={0}>
-            <div className="w-full h-full flex items-center justify-center">
-              <Icon name="EllipsisVertical" />
-            </div>
-          </Tooltip>
+          <Icon name="EllipsisVertical" />
         </Button>
-      </PopoverTrigger>
 
-      <PopoverContent className="p-1.5">
-        <div className="flex h-8 items-center gap-1.5">
-          {scriptButtons.map(btn => (
-            <EditorButton
-              key={btn.key}
-              editor={editor}
-              isIconOnly
-              withActive
-              buttonKey={btn.key}
-              tooltipText={btn.tooltipText}
-              icon={btn.icon}
-              onPressed={btn.command}
-            />
-          ))}
+        <Popover.Content placement="bottom">
+          <Popover.Dialog className="p-1.5">
+            <div className="flex h-8 items-center gap-1.5">
+              {scriptButtons.map(btn => (
+                <EditorButton
+                  key={btn.key}
+                  editor={editor}
+                  isIconOnly
+                  withActive
+                  buttonKey={btn.key}
+                  tooltipText={btn.tooltipText}
+                  icon={btn.icon}
+                  onPressed={btn.command}
+                />
+              ))}
 
-          <Divider orientation="vertical" className="h-6" />
+              <Separator orientation="vertical" className="h-6" />
 
-          {alignButtons.map(btn => (
-            <EditorButton
-              key={btn.key}
-              editor={editor}
-              isIconOnly
-              withActive
-              buttonKey={{ textAlign: btn.key }}
-              tooltipText={btn.tooltipText}
-              icon={btn.icon}
-              onPressed={btn.command}
-            />
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
+              {alignButtons.map(btn => (
+                <EditorButton
+                  key={btn.key}
+                  editor={editor}
+                  isIconOnly
+                  withActive
+                  buttonKey={{ textAlign: btn.key }}
+                  tooltipText={btn.tooltipText}
+                  icon={btn.icon}
+                  onPressed={btn.command}
+                />
+              ))}
+            </div>
+          </Popover.Dialog>
+        </Popover.Content>
+      </Popover>
+
+      <Tooltip.Content>
+        <p>{'More tools'}</p>
+      </Tooltip.Content>
+    </Tooltip>
+
   );
 };
 

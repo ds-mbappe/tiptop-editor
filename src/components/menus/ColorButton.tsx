@@ -12,39 +12,60 @@ const ColorButton = ({
   tooltipText,
   tooltipDisabled = false,
 }: ColorButtonProps) => {
-  const isActive = buttonType === 'text'
-    ? editor.getAttributes('textStyle')?.color === hsl
-    : editor.getAttributes('highlight')?.color === hsl;
+  const isActive = useCallback(() => {
+    if (!hsl) return false
+    if (buttonType === 'text') {
+      return editor.getAttributes('textStyle')?.color === hsl
+    } else if (buttonType === 'highlight') {
+      return editor.getAttributes('highlight')?.color === hsl
+    } else {
+      return false
+    }
+  }, [buttonType, editor, hsl])
 
   const handlePress = useCallback(() => {
     if (buttonType === 'text') {
-      if (isActive) {
+      if (!hsl || isActive()) {
         editor.commands.unsetColor()
       } else {
         editor.commands.setColor(hsl)
       }
     } else {
-      editor.commands.toggleHighlight({ color: hsl });
+      if (!hsl) {
+        editor.commands.unsetHighlight();
+      } else {
+        editor.commands.toggleHighlight({ color: hsl });
+      }
     }
   }, [editor, buttonType, hsl, isActive]);
 
+  const button = (
+    <Button
+      size="sm"
+      isIconOnly
+      variant="ghost"
+      isDisabled={false}
+      aria-label={tooltipText}
+      data-active={isActive()}
+      className="text-muted data-[active=true]:bg-default/45 data-[active=true]:hover:bg-default/45"
+      onPress={handlePress}
+    >
+      <div className="w-full h-full flex items-center justify-center">
+        <ColorIcon color={color} bgColor={bgColor} buttonType={buttonType} />
+      </div>
+    </Button>
+  )
+
+  if (tooltipDisabled) {
+    return button
+  }
+
   return (
-    <Tooltip content={tooltipText} delay={250} closeDelay={0} isDisabled={tooltipDisabled}>
-      <Button
-        size="sm"
-        isIconOnly
-        color="default"
-        variant="light"
-        isDisabled={false}
-        aria-label={tooltipText}
-        data-active={isActive}
-        className="text-foreground-500 data-[active=true]:bg-divider/45 data-[active=true]:hover:bg-divider/45"
-        onPress={handlePress}
-      >
-        <div className="w-full h-full flex items-center justify-center">
-          <ColorIcon color={color} bgColor={bgColor} buttonType={buttonType} />
-        </div>
-      </Button>
+    <Tooltip delay={250} closeDelay={0}>
+      {button}
+      <Tooltip.Content>
+        <p>{tooltipText}</p>
+      </Tooltip.Content>
     </Tooltip>
   );
 };

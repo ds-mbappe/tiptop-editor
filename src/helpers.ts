@@ -1,13 +1,12 @@
 import { Editor, findParentNodeClosestToPos, isTextSelection } from '@tiptap/core';
 import type { JSONContent } from '@tiptap/core';
-import { EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state';
+import { AllSelection, EditorState, NodeSelection, TextSelection } from '@tiptap/pm/state';
 import { CellSelection } from '@tiptap/pm/tables';
 import { CodeBlock } from './extensions/CodeBlock';
 import HorizontalRule from './extensions/HorizontalRule';
 import type { DocumentMap, DocumentNode, DocumentWord, SlashCommandGroupCommandsProps, TargetedUpdate, TargetedUpdateReplacement } from './types';
 import { Fragment, Node } from '@tiptap/pm/model';
-import { addToast } from '@heroui/react';
-import CloseIcon from './components/ui/CloseIcon';
+import { toast } from '@heroui/react';
 
 export const isTextSelected = (editor: Editor) => {
   const { state } = editor;
@@ -17,7 +16,7 @@ export const isTextSelected = (editor: Editor) => {
   // Sometime check for `empty` is not enough.
   // Doubleclick an empty paragraph returns a node size of 2.
   // So we check also for an empty text size.
-  const isEmptyTextBlock = !doc.textBetween(from, to).length && isTextSelection(selection);
+  const isEmptyTextBlock = !doc.textBetween(from, to).length && (isTextSelection(selection) || selection instanceof AllSelection);
   const isSameNodeSelected = selection instanceof NodeSelection;
 
   return !(empty || isEmptyTextBlock || isSameNodeSelected);
@@ -27,7 +26,7 @@ export const hasTextNodeInSelection = (editor: Editor): boolean => {
   const { state } = editor;
   const { selection, doc } = state;
 
-  if (!(selection instanceof TextSelection)) return false;
+  if (!(selection instanceof TextSelection) && !(selection instanceof AllSelection)) return false;
   
   let found = false;
 
@@ -239,7 +238,8 @@ export const deleteNode = (editor: Editor) => {
     editor?.storage.imageUploaderExtension.cancelUpload(editor, attrs.id)
     editor.view.focus()
 
-    if (attrs?.uploading) showToast('Info', 'primary', 'Upload cancelled.')
+    if (attrs?.uploading) showToast('Info', 'accent', 'Upload cancelled.')
+
     return
   }
 
@@ -511,19 +511,18 @@ export const updateNodeByPos = (editor: Editor, find: { id?: string; pos?: numbe
 
 export const showToast = (
   title?: string,
-  color?: "primary" | "default" | "foreground" | "secondary" | "success" | "warning" | "danger" | undefined,
+  color?: "accent" | "default" | "success" | "warning" | "danger" | undefined,
   description?: string
 ) => {
-  addToast({
-    title: title || 'Title',
-    color: color || 'primary',
-    timeout: 5000,
-    description: description || 'Description',
-    classNames: {
-      closeButton: "opacity-100 absolute right-4 top-1/2 -translate-y-1/2",
-    },
-    closeIcon: CloseIcon,
-  })
+  const t = title || 'Title'
+  const d = description || 'Description'
+
+  switch (color) {
+    case 'danger': toast.danger(t, { description: d }); break;
+    case 'success': toast.success(t, { description: d }); break;
+    case 'warning': toast.warning(t, { description: d }); break;
+    default: toast(t, { description: d });
+  }
 }
 
 export const getUploaderAtPos = (state: Editor['state'], pos: number) => {

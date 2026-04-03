@@ -55,16 +55,16 @@ const EmojiList = forwardRef<KeyDownRef, {
   };
 
   return (
-    <div className='w-full max-w-[250px] max-h-[500px] bg-background border border-divider shadow rounded-2xl flex flex-col gap-1 p-2.5 relative overflow-hidden'>
+    <div className='w-full max-w-[250px] max-h-[500px] bg-background border shadow rounded-2xl flex flex-col gap-1 p-2.5 relative overflow-hidden'>
       <div className='w-full flex flex-col gap-1 overflow-y-auto'>
         {items.length > 0 ? (
           items.map((item, index) => (
             <button
               key={item.name}
               className={cn(
-                'w-full h-7 rounded-lg flex gap-1.5 items-center p-2 bg-transparent hover:bg-default-100 cursor-pointer text-foreground-500 transition-all',
+                'w-full h-7 rounded-lg flex gap-1.5 items-center p-2 bg-transparent hover:bg-default/10 cursor-pointer text-muted transition-all',
                 selectedIndex === index
-                  ? 'bg-default-100 text-primary'
+                  ? 'bg-default/10 text-accent'
                   : 'hover:text-foreground'
               )}
               data-emoji-name={item.name}
@@ -80,7 +80,7 @@ const EmojiList = forwardRef<KeyDownRef, {
             </button>
           ))
         ) : (
-          <p className="text-foreground-500 text-sm">
+          <p className="text-muted text-sm">
             {'No results'}
           </p>
         )}

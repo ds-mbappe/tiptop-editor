@@ -1,8 +1,7 @@
 @import "tailwindcss";
-@plugin './hero.ts';
+@import "@heroui/styles";
 
 @source './components/**/*.{ts,tsx}';
-@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -18,11 +17,25 @@
 }
 
 .bubble-menu {
-  @apply flex items-center h-10 gap-1 p-[3px] border border-divider rounded-[15px] bg-background shadow-md outline-0 overflow-hidden z-50;
+  @apply flex items-center h-10 gap-1 p-[3px] border rounded-[15px] bg-background shadow-md outline-0 overflow-hidden z-50;
+}
+
+/* Smoother overlay animations (popover, dropdown, tooltip) */
+.popover[data-entering="true"],
+.dropdown[data-entering="true"],
+.tooltip[data-entering="true"] {
+  @apply duration-200;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popover[data-exiting="true"],
+.dropdown[data-exiting="true"],
+.tooltip[data-exiting="true"] {
+  @apply duration-150;
 }
 
 .ProseMirror {
-  @apply w-full max-w-3xl mx-auto px-12 pt-12 pb-48 caret-primary outline-0;
+  @apply w-full max-w-3xl mx-auto px-12 pt-12 pb-48 caret-accent outline-0;
 
   font-family: DM Sans, sans-serif !important;
 
@@ -164,7 +177,7 @@
 
   /* CodeBlock and code styles */
   pre {
-    @apply whitespace-pre-wrap my-6 rounded border border-content1 bg-foreground-500 dark:bg-divider p-3 text-background caret-background;
+    @apply whitespace-pre-wrap my-6 rounded border border-surface bg-foreground/50 dark:bg-default p-3 text-background caret-background;
 
     code {
       @apply bg-transparent p-0 text-inherit rounded-none border-none;
@@ -172,7 +185,7 @@
   }
 
   code {
-    @apply bg-foreground-500/10 text-foreground rounded-md text-xs py-1 px-1.5 border border-divider
+    @apply bg-foreground/10 text-foreground rounded-md text-xs py-1 px-1.5 border
   }
 
   .hljs-comment,
@@ -232,7 +245,7 @@
     @apply my-1 py-4 transition-all duration-100 ease-in-out cursor-pointer;
 
     hr {
-      @apply border-0 border-t border-t-divider;
+      @apply border-0 border-t;
     }
   }
 
@@ -248,20 +261,20 @@
 
   th,
   td {
-    @apply relative min-w-32 border border-divider px-3 py-2 align-top;
+    @apply relative min-w-32 border px-3 py-2 align-top;
   }
 
   th {
-    @apply bg-content2 text-left font-semibold;
+    @apply bg-surface-secondary text-left font-semibold;
   }
 
   .selectedCell::after {
-    @apply pointer-events-none absolute inset-0 bg-primary/10;
+    @apply pointer-events-none absolute inset-0 bg-accent/10;
     content: '';
   }
 
   .column-resize-handle {
-    @apply pointer-events-none absolute -right-px top-0 bottom-0 w-0.5 bg-primary;
+    @apply pointer-events-none absolute -right-px top-0 bottom-0 w-0.5 bg-accent;
   }
 
   &.resize-cursor {
@@ -270,7 +283,7 @@
 
   /* Slash command decoration styles */
   .tiptop-slash-highlight {
-    @apply rounded bg-divider/65 outline-[5.5px] outline-solid outline-divider/65;
+    @apply rounded bg-default/65 outline-[5.5px] outline-solid outline-default/65;
   }
 
   /* Highlight styles */
@@ -285,7 +298,7 @@
 
   /* Link styles */
   a {
-    @apply text-primary cursor-pointer underline;
+    @apply text-accent cursor-pointer underline;
   }
 
   /* Image Node View styles */
@@ -295,11 +308,11 @@
 }
 
 .ProseMirror ::selection {
-  @apply bg-primary-50 dark:bg-cyan-700;
+  @apply bg-accent-soft dark:bg-cyan-700;
 }
 
 .ProseMirror-selectednode {
-  @apply bg-primary-50 dark:bg-cyan-700 rounded-lg !outline-none;
+  @apply bg-accent-soft dark:bg-cyan-700 rounded-lg !outline-none;
 }
 
 .tiptop-editor-no-padding .ProseMirror {

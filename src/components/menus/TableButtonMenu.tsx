@@ -1,12 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  Button,
-  Divider,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Tooltip,
-} from '@heroui/react'
+import { Button, Popover, Separator } from '@heroui/react'
 import type { Editor } from '@tiptap/react'
 import Icon from '../ui/Icon'
 
@@ -119,72 +112,61 @@ const TableButtonMenu = ({ editor }: TableButtonMenuProps) => {
   }
 
   return (
-    <Popover
-      placement="bottom"
-      isOpen={menuOpened}
-      onOpenChange={setMenuOpened}
-    >
-      <PopoverTrigger>
-        <Button
-          size="sm"
-          color="default"
-          variant="light"
-          isIconOnly
-          aria-label="Table controls"
-          className="text-foreground-500 hover:text-foreground data-[active=true]:bg-divider/45 data-[active=true]:text-primary data-[active=true]:hover:bg-divider/45 data-[active=true]:hover:text-foreground"
-        >
-          <Tooltip content="Table controls" delay={250} closeDelay={0}>
-            <div className="w-full h-full flex items-center justify-center">
-              <Icon name="Table2" />
-            </div>
-          </Tooltip>
-        </Button>
-      </PopoverTrigger>
+    <Popover isOpen={menuOpened} onOpenChange={setMenuOpened}>
+      <Button
+        size="sm"
+        variant="ghost"
+        isIconOnly
+        aria-label="Table controls"
+        className="text-muted hover:text-foreground data-[active=true]:bg-default/45 data-[active=true]:text-accent data-[active=true]:hover:bg-default/45 data-[active=true]:hover:text-foreground"
+      >
+        <Icon name="Table2" />
+      </Button>
 
-      <PopoverContent className="p-1.5">
-        <div className="flex flex-col gap-1">
-          {actionGroups.map((group, index) => (
-            <React.Fragment key={group.key}>
-              <div className="grid grid-cols-2 gap-1">
-                {group.actions.map((action) => (
-                  <Button
-                    key={action.key}
-                    size="sm"
-                    color="default"
-                    variant="light"
-                    isDisabled={!action.canRun()}
-                    className="justify-start text-foreground-500 hover:text-foreground"
-                    onPress={() => {
-                      action.command()
-                      setMenuOpened(false)
-                    }}
-                  >
-                    {action.label}
-                  </Button>
-                ))}
-              </div>
+      <Popover.Content placement="bottom">
+        <Popover.Dialog className="p-1.5">
+          <div className="flex flex-col gap-1">
+            {actionGroups.map((group, index) => (
+              <React.Fragment key={group.key}>
+                <div className="grid grid-cols-2 gap-1">
+                  {group.actions.map((action) => (
+                    <Button
+                      key={action.key}
+                      size="sm"
+                      variant="ghost"
+                      isDisabled={!action.canRun()}
+                      className="justify-start text-muted hover:text-foreground"
+                      onPress={() => {
+                        action.command()
+                        setMenuOpened(false)
+                      }}
+                    >
+                      {action.label}
+                    </Button>
+                  ))}
+                </div>
 
-              {index < actionGroups.length - 1
-                ? <Divider className="my-0.5" />
-                : null}
-            </React.Fragment>
-          ))}
+                {index < actionGroups.length - 1
+                  ? <Separator className="my-0.5" />
+                  : null}
+              </React.Fragment>
+            ))}
 
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            isDisabled={!editor.can().chain().focus().deleteTable().run()}
-            className="justify-start text-danger"
-            onPress={() => {
-              editor.chain().focus().deleteTable().run()
-              setMenuOpened(false)
-            }}
-          >
-            Delete table
-          </Button>
-        </div>
-      </PopoverContent>
+            <Button
+              size="sm"
+              variant="danger-soft"
+              isDisabled={!editor.can().chain().focus().deleteTable().run()}
+              className="justify-start text-danger"
+              onPress={() => {
+                editor.chain().focus().deleteTable().run()
+                setMenuOpened(false)
+              }}
+            >
+              Delete table
+            </Button>
+          </div>
+        </Popover.Dialog>
+      </Popover.Content>
     </Popover>
   )
 }

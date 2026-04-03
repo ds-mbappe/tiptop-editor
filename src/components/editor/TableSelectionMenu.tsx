@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { BubbleMenu } from '@tiptap/react/menus'
-import { Divider } from '@heroui/react'
+import { Separator } from '@heroui/react'
 import TableButtonMenu from '../menus/TableButtonMenu'
 import { isTableCellSelection, isTextSelected } from '../../helpers'
 import type { TextSelectionMenuProps } from '../../types'
 
 const TableSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) => {
+  const isHoveringRef = useRef(false)
+
   const shouldShow = useCallback(() => {
+    if (isHoveringRef.current) return true
     return editor.isEditable && editor.isActive('table') && (isTableCellSelection(editor) || !isTextSelected(editor))
   }, [editor])
 
@@ -17,19 +20,23 @@ const TableSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps)
       options={{ offset: 3 }}
       shouldShow={shouldShow}
     >
-      <div className="bubble-menu">
+      <div
+        onMouseEnter={() => { isHoveringRef.current = true }}
+        onMouseLeave={() => { isHoveringRef.current = false }}
+        className="bubble-menu"
+      >
         {prepend && (
           <>
             <div className="flex items-center gap-1">
               {prepend}
             </div>
-            <Divider orientation="vertical" className="h-6" />
+            <Separator orientation="vertical" className="h-6" />
           </>
         )}
         <TableButtonMenu editor={editor} />
         {append && (
           <>
-            <Divider orientation="vertical" className="h-6" />
+            <Separator orientation="vertical" className="h-6" />
             <div className="flex items-center gap-1">
               {append}
             </div>

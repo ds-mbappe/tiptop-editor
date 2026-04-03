@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { BubbleMenu } from '@tiptap/react/menus';
-import { Divider } from '@heroui/react';
+import { Separator } from '@heroui/react';
 import EditorButton from '../ui/EditorButton';
 import LinkButtonMenu from './LinkButtonMenu';
 import ColorButtonMenu from './ColorButtonMenu';
@@ -15,6 +15,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInTable, setIsInTable] = useState(() => editor.isActive('table'));
   const timeoutRef = useRef<NodeJS.Timeout>(null);
+  const isHoveringRef = useRef(false);
 
   const formattingButtons = useMemo(
     () => [
@@ -28,6 +29,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   );
 
   const shouldShow = useCallback(() => {
+    if (isHoveringRef.current) return true;
     return editor.isEditable && isTextSelected(editor) && hasTextNodeInSelection(editor) && !isForbiddenNodeSelected(editor);
   }, [editor]);
 
@@ -38,6 +40,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   }, []);
 
   const handleHide = useCallback(() => {
+    if (isHoveringRef.current) return;
     setIsAnimating(false);
     timeoutRef.current = setTimeout(() => setIsVisible(false), 200);
   }, []);
@@ -66,6 +69,8 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
       shouldShow={shouldShow}
     >
       <div
+        onMouseEnter={() => { isHoveringRef.current = true; }}
+        onMouseLeave={() => { isHoveringRef.current = false; }}
         className={
           `bubble-menu transition-all duration-200 ease-in-out
           ${isVisible && isAnimating ? 'opacity-100' : 'opacity-0'}`
@@ -74,7 +79,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
         {prepend && (
           <div className='flex items-center gap-1'>
             {prepend}
-            <Divider orientation='vertical' className='h-6' />
+            <Separator orientation='vertical' className='h-6' />
           </div>
         )}
 
@@ -92,25 +97,25 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
           </div>
         ))}
 
-        <Divider orientation='vertical' className='h-6' />
+        <Separator orientation='vertical' className='h-6' />
 
         <LinkButtonMenu editor={editor} />
         
         <ColorButtonMenu editor={editor} />
 
-        <Divider orientation='vertical' className='h-6' />
+        <Separator orientation='vertical' className='h-6' />
 
         {isInTable && (
           <>
             <TableButtonMenu editor={editor} />
-            <Divider orientation='vertical' className='h-6' />
+            <Separator orientation='vertical' className='h-6' />
           </>
         )}
 
         {append && (
           <div className='flex items-center gap-1'>
             {append}
-            <Divider orientation='vertical' className='h-6' />
+            <Separator orientation='vertical' className='h-6' />
           </div>
         )}
 

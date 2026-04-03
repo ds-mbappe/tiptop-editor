@@ -5,7 +5,7 @@ import {
   useEffect,
 } from 'react';
 import type { SlashCommandGroupProps, SlashCommandGroupCommandsProps, KeyDownRef } from '../../types';
-import { cn, Divider } from '@heroui/react';
+import { cn, Separator } from '@heroui/react';
 import { icons } from 'lucide-react';
 import Icon from '../../components/ui/Icon';
 
@@ -63,7 +63,7 @@ const SlashCommandList = forwardRef<KeyDownRef, {
   return (
     <div
       aria-label="Command menu"
-      className='w-[200px] bg-background border border-divider shadow rounded-2xl flex flex-col gap-2 p-2.5 relative z-5'
+      className='w-[200px] bg-background border shadow rounded-2xl flex flex-col gap-2 p-2.5 relative z-5'
     >
       {items.length > 0 ? (
         items.map((group, groupIndex) => (
@@ -82,9 +82,9 @@ const SlashCommandList = forwardRef<KeyDownRef, {
                   <button
                     key={item.key}
                     className={cn(
-                      'w-full h-8 rounded-lg flex gap-1.5 items-center p-2 bg-transparent hover:bg-default-100 cursor-pointer text-foreground-500 transition-all',
+                      'w-full h-8 rounded-lg flex gap-1.5 items-center p-2 bg-transparent hover:bg-default/10 cursor-pointer text-muted transition-all',
                       selectedIndex === globalIndex
-                        ? 'bg-default-100 text-primary'
+                        ? 'bg-default/10 text-accent'
                         : 'hover:text-foreground'
                     )}
                     onClick={() => selectItem(globalIndex)}
@@ -100,12 +100,12 @@ const SlashCommandList = forwardRef<KeyDownRef, {
             </div>
 
             {groupIndex !== items.length - 1 &&
-              <Divider />
+              <Separator />
             }
           </div>
         ))
       ) : (
-        <p className="text-foreground-500 text-sm">
+        <p className="text-muted text-sm">
           {'No results'}
         </p>
       )}

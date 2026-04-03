@@ -4,6 +4,35 @@
 
 - Nothing yet.
 
+## 2.0.0 - 2026-04-03
+
+Diff baseline: `v1.6.5`
+
+### Breaking Changes
+
+- **HeroUI v3.** The package now depends on `@heroui/react ^3`. Consumers must upgrade their HeroUI installation. Key differences from v2:
+  - No `HeroUIProvider` is required — remove it from your app root.
+  - CSS is now imported with `@import "@heroui/styles"` instead of the v2 Tailwind plugin. Add this import to your own CSS entry file alongside `@import "tailwindcss"`.
+  - Component APIs use the new compound-component pattern (e.g. `Popover.Content`, `Dropdown.Section`, `Toast.Provider`). If you were relying on internal HeroUI component structure for custom styling, review the v3 docs.
+  - `EditorButtonProps.variant` and `color` props use HeroUI v3 values (`"ghost"`, `"primary"`, etc.) instead of v2 values.
+- **`slots.dragHandleDropdown` requires a `Dropdown.Section` parent.** Custom items injected into the drag-handle dropdown must be wrapped in `<Dropdown.Section>` to render correctly.
+
+### Added
+
+- `slots.dragHandleDropdown` — inject custom items after the first section of the drag handle dropdown. Must be a `<Dropdown.Section>` node.
+
+### Fixed
+
+- "Default background" highlight color button now calls `unsetHighlight()` instead of calling `toggleHighlight({ color: 'hsl()' })`, which previously applied a yellow highlight.
+- "Default text" color button now always calls `unsetColor()` regardless of active state.
+- Text selection bubble menu now appears when selecting all content with Ctrl+A. ProseMirror's `AllSelection` is now handled alongside `TextSelection` in `isTextSelected` and `hasTextNodeInSelection`.
+
+### Changed
+
+- Replaced `hero.ts` Tailwind plugin with `@import "@heroui/styles"` in `index.css`. The plugin file has been removed.
+- `Toast.Provider` replaces `ToastProvider` from HeroUI v2.
+- Storybook decorator no longer wraps stories in `HeroUIProvider` (not needed in v3).
+
 ## 1.6.5 - 2026-03-24
 
 Diff baseline: `v1.6.4`

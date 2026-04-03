@@ -109,7 +109,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
           {renderTiptopSlot(slots.editorTop, editor)}
           {editor &&
             <>
-              {showDragHandle ? <TiptopDragHandle editor={editor} /> : null}
+              {showDragHandle ? <TiptopDragHandle editor={editor} dragHandleSlot={renderTiptopSlot(slots.dragHandleDropdown, editor)} /> : null}
 
               <TextSelectionMenu
                 editor={editor}

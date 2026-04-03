@@ -25,6 +25,32 @@ https://tiptap.dev/docs/ui-components/templates/notion-like-editor
 npm install tiptop-editor
 ```
 
+## Setup
+
+This package requires HeroUI v3. Add its styles import to your CSS entry file:
+
+```css
+@import "tailwindcss";
+@import "@heroui/styles";
+```
+
+No `HeroUIProvider` wrapper is needed in your app — HeroUI v3 works without a root provider.
+
+If you use the toast notifications, render `Toast.Provider` once near the root of your app:
+
+```tsx
+import { Toast } from '@heroui/react'
+
+export function App() {
+  return (
+    <>
+      <YourApp />
+      <Toast.Provider placement="top end" />
+    </>
+  )
+}
+```
+
 ## Basic Usage
 
 ```tsx
@@ -122,6 +148,7 @@ Supported slots:
 - `selectionMenuAppend`
 - `tableMenuPrepend`
 - `tableMenuAppend`
+- `dragHandleDropdown`
 
 Each slot accepts either:
 
@@ -135,6 +162,24 @@ Each slot accepts either:
       <button onClick={() => editor.chain().focus().insertContent('<p>Draft</p>').run()}>
         Insert draft
       </button>
+    ),
+  }}
+/>
+```
+
+The `dragHandleDropdown` slot injects additional items into the block drag-handle dropdown. The slot content must be wrapped in a `<Dropdown.Section>`:
+
+```tsx
+import { Dropdown, Label } from '@heroui/react'
+
+<TiptopEditor
+  slots={{
+    dragHandleDropdown: ({ editor }) => (
+      <Dropdown.Section>
+        <Dropdown.Item id="ai_rewrite" textValue="AI Rewrite" onPress={() => console.log('AI rewrite', editor)}>
+          <Label>AI Rewrite</Label>
+        </Dropdown.Item>
+      </Dropdown.Section>
     ),
   }}
 />

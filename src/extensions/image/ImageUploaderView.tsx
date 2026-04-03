@@ -84,7 +84,7 @@ const ImageUploaderView = (props: NodeViewProps) => {
   const cancelUpload = () => {
     const pos = typeof props.getPos === 'function' ? props.getPos() : undefined
     editor?.storage.imageUploaderExtension.cancelUpload(editor, id, pos)
-    showToast('Info', 'primary', 'Upload cancelled')
+    showToast('Info', 'accent', 'Upload cancelled')
   }
 
   // Always prevent default drop behavior, even when uploading
@@ -120,8 +120,8 @@ const ImageUploaderView = (props: NodeViewProps) => {
     >
       <div
         className={cn(
-          isDragging ? 'bg-primary-50' : ' bg-background',
-          selectMedia ? 'border-1.5 border-dashed border-divider px-6 py-8' : '',
+          isDragging ? 'bg-accent-soft' : ' bg-background',
+          selectMedia ? 'border border-dashed px-6 py-8' : '',
           'w-full h-full flex flex-col rounded-lg text-center cursor-pointer relative overflow-hidden transition-all'
         )}
         draggable={false}
@@ -160,9 +160,9 @@ const ImageUploaderView = (props: NodeViewProps) => {
         )}
 
         {uploading && (
-          <div className="w-full flex justify-between items-center gap-5 border border-divider p-4 overflow-hidden rounded-lg relative">
+          <div className="w-full flex justify-between items-center gap-5 border p-4 overflow-hidden rounded-lg relative">
             <div
-              className='h-full bg-primary-50 dark:bg-primary-200 absolute top-0 left-0 z-0 transition-all'
+              className='h-full bg-accent-soft dark:bg-accent/20 absolute top-0 left-0 z-0 transition-all'
               style={{
                 width: `${progress}%`
               }}
@@ -171,7 +171,7 @@ const ImageUploaderView = (props: NodeViewProps) => {
             </div>
 
             <div className='w-full flex items-center gap-3 z-1'>
-              <div className='w-[46px] h-10 flex items-center justify-center bg-primary dark:bg-foreground rounded-lg'>
+              <div className='w-[46px] h-10 flex items-center justify-center bg-accent dark:bg-foreground rounded-lg'>
                 <Icon name='CloudUpload' className='text-background w-6 h-6' />
               </div>
 
@@ -187,15 +187,13 @@ const ImageUploaderView = (props: NodeViewProps) => {
             </div>
 
             <div className='flex items-center gap-3 z-1'>
-              <span className='text-sm text-primary'>
+              <span className='text-sm text-accent'>
                 {progress}%
               </span>
 
               <Button
                 size='sm'
-                radius='md'
-                color='default'
-                variant='light'
+                variant='ghost'
                 isIconOnly
                 onPress={cancelUpload}
               >

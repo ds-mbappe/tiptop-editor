@@ -6,7 +6,7 @@ export const colorSections = [
     buttonType: 'text',
     title: 'Text color',
     colors: [
-      { hsl: 'hsl()', color: '--heroui-foreground', bgColor: '--heroui-background', tooltipText: 'Default text' },
+      { hsl: '', color: '--heroui-foreground', bgColor: '--heroui-background', tooltipText: 'Default text' },
       { hsl: 'hsl(0, 0%, 61%)', color: '--text-color-gray', bgColor: '', tooltipText: 'Gray text' },
       { hsl: 'hsl(18, 35%, 58%)', color: '--text-color-brown', bgColor: '', tooltipText: 'Brown text' },
       { hsl: 'hsl(25, 53%, 53%)', color: '--text-color-orange', bgColor: '', tooltipText: 'Orange text' },
@@ -23,7 +23,7 @@ export const colorSections = [
     buttonType: 'highlight',
     title: 'Highlight color',
     colors: [
-      { hsl: 'hsl()', color: '--heroui-background', bgColor: '--heroui-background', tooltipText: 'Default background' },
+      { hsl: '', color: '--heroui-background', bgColor: '--heroui-background', tooltipText: 'Default background' },
       { hsl: 'hsl(0, 0%, 61%)', color: '--text-color-gray', bgColor: '--text-color-gray', tooltipText: 'Gray background' },
       { hsl: 'hsl(18, 35%, 58%)', color: '--text-color-brown', bgColor: '--text-color-brown', tooltipText: 'Brown background' },
       { hsl: 'hsl(25, 53%, 53%)', color: '--text-color-orange', bgColor: '--text-color-orange', tooltipText: 'Orange background' },

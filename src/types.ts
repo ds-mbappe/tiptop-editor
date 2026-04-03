@@ -51,8 +51,7 @@ export interface EditorButtonProps {
   editor: Editor,
   iconClass?: string,
   icon?: keyof typeof icons,
-  variant?: "flat" | "shadow" | "solid" | "bordered" | "light" | "faded" | "ghost",
-  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger",
+  variant?: "primary" | "secondary" | "tertiary" | "outline" | "ghost" | "danger" | "danger-soft",
   onPressed?: () => void,
 }
 
@@ -105,12 +104,23 @@ export type TiptopEditorSlot =
   | ((props: TiptopEditorSlotProps) => React.ReactNode)
 
 export interface TiptopEditorSlots {
+  /** The slot before the actual editor content.*/
   editorTop?: TiptopEditorSlot
+  /** The slot after the actual editor content.*/
   editorBottom?: TiptopEditorSlot
+  /** The slot at the start of the selection Menu, right before the Bold button.*/
   selectionMenuPrepend?: TiptopEditorSlot
+  /** The slot at the end of the selection Menu, right before the More options button.*/
   selectionMenuAppend?: TiptopEditorSlot
+  /** The slot at the start of the table selection Menu.*/
   tableMenuPrepend?: TiptopEditorSlot
+  /** The slot at the end of the table selection Menu.*/
   tableMenuAppend?: TiptopEditorSlot
+  /** The slot after the first section in the Drag Handle Menu.
+   * 
+   * Must have a parent of type DropdownSection in order to be displayed.
+  */
+  dragHandleDropdown?: TiptopEditorSlot
 }
 
 export interface DocumentWord {

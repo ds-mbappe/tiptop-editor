@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Button } from '@heroui/react'
+import { Button, Dropdown, Label } from '@heroui/react'
 import TiptopEditor from './TiptopEditor'
 import { useTiptopEditor } from './TiptopEditorContext'
 
@@ -57,8 +57,7 @@ const AiToolbar = () => {
 
       <Button
         size="sm"
-        color="primary"
-        variant="flat"
+        variant="primary"
         onPress={() => {
           editor.chain().focus().insertContent('<p>AI inserted this paragraph.</p>').run()
         }}
@@ -79,8 +78,7 @@ const AiRewriteButton = () => {
   return (
     <Button
       size="sm"
-      color="primary"
-      variant="light"
+      variant="ghost"
       onPress={() => {
         const text = editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, ' ')
 
@@ -123,6 +121,44 @@ export const WithSlots: Story = {
     slots: {
       editorTop: <AiToolbar />,
       selectionMenuAppend: <AiRewriteButton />,
+    },
+  },
+}
+
+export const ViewMode: Story = {
+  args: {
+    editorOptions: {
+      content: defaultContent,
+      immediatelyRender: false,
+      editable: false,
+    },
+  },
+}
+
+export const WithDragHandleSlot: Story = {
+  args: {
+    editorOptions: {
+      content: defaultContent,
+      immediatelyRender: false,
+    },
+    slots: {
+      dragHandleDropdown: ({ editor }) => (
+        <Dropdown.Section>
+          <Dropdown.Item
+            id="ai_rewrite"
+            textValue="AI Rewrite"
+            onPress={() => {
+              const { from, to } = editor.state.selection
+              const text = editor.state.doc.textBetween(from, to, ' ')
+              if (text) {
+                editor.chain().focus().insertContent(` ${text.toUpperCase()}`).run()
+              }
+            }}
+          >
+            <Label>AI Rewrite (demo)</Label>
+          </Dropdown.Item>
+        </Dropdown.Section>
+      ),
     },
   },
 }
