@@ -19,6 +19,7 @@ export const ImageUploaderExtension = Extension.create<ImageUploaderExtensionOpt
     return {
       imgUploadUrl: undefined,
       imgUploadResponseKey: undefined,
+      imgUploadHeaders: undefined,
       allowedMimeTypes: ['image/jpeg', 'image/png', 'image/jpg'],
       maxFileSize: 5 * 1024 * 1024, // 5MB in bytes
     }
@@ -63,7 +64,7 @@ export const ImageUploaderExtension = Extension.create<ImageUploaderExtensionOpt
 
     return {
       uploadImageFromFile: (editor: Editor, file: File, id: string, updateExisting?: boolean, pos?: number) => {
-        const { imgUploadUrl, imgUploadResponseKey, allowedMimeTypes, maxFileSize } = this.options
+        const { imgUploadUrl, imgUploadResponseKey, imgUploadHeaders, allowedMimeTypes, maxFileSize } = this.options
 
         if (!file) return
 
@@ -214,6 +215,7 @@ export const ImageUploaderExtension = Extension.create<ImageUploaderExtensionOpt
               url: imgUploadUrl,
               onProgress: handleProgress,
               signal: abortController.signal,
+              headers: imgUploadHeaders,
             })
 
             // Check if cancelled after upload completes

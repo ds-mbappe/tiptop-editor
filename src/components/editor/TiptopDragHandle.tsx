@@ -9,7 +9,7 @@ import { commandGroups } from '../../constants'
 import type { icons } from 'lucide-react'
 import DragHandleColorList from './DragHandleColorList'
 import TransformIntoIcon from './TransformIntoIcon'
-import { canShowColorTransform, canShowNodeTransform, hasAtLeastOneMark, isUploadingImage, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../../helpers'
+import { canShowColorTransform, canShowNodeTransform, copyNodeTextContent, deleteNode, duplicateNode, hasAtLeastOneMark, isUploadingImage, nodeHasTextContent, removeAllFormatting, transformNodeToAlternative } from '../../helpers'
 
 const excludedCommands = ['imageUploader'];
 
@@ -114,7 +114,12 @@ const TiptopDragHandle = ({ editor, dragHandleSlot }: { editor: Editor, dragHand
               shouldCloseOnSelect={true}
               disabledKeys={dragHandleDisabledKeys}
               className='w-[225px]'
-              onAction={(key) => console.log(key)}
+              onAction={(key) => {
+                if (key === 'duplicate_node') duplicateNode(editor)
+                else if (key === 'delete') deleteNode(editor)
+                else if (key === 'copy_to_clipboard') copyNodeTextContent(editor)
+                else if (key === 'reset_formatting') removeAllFormatting(editor)
+              }}
             >
               <Dropdown.Section>
                 {canShowColorTransform(editor)

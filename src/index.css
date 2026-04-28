@@ -177,7 +177,7 @@
 
   /* CodeBlock and code styles */
   pre {
-    @apply whitespace-pre-wrap my-6 rounded border border-surface bg-foreground/50 dark:bg-default p-3 text-background caret-background;
+    @apply whitespace-pre-wrap my-6 rounded border border-surface bg-neutral-900 dark:bg-neutral-800 p-3 text-neutral-100 caret-neutral-100;
 
     code {
       @apply bg-transparent p-0 text-inherit rounded-none border-none;

@@ -23,6 +23,12 @@ export type TiptopEditorOptions = Omit<Partial<UseEditorOptions & {
  */
   imgUploadResponseKey?: ImageUploadResponseResolver
   /**
+ * Custom HTTP headers to include in the image upload request.
+ * Useful for passing authorization tokens or other API headers.
+ * @default undefined
+ */
+  imgUploadHeaders?: Record<string, string>
+  /**
  * Disables the default Card wrapper and removes the editor's built-in padding.
  * Use this when you want to embed the editor inside your own layout container.
  * @default false
@@ -232,6 +238,7 @@ export interface ImageUploaderExtensionOptions {
   imgUploadResponseKey?: ImageUploadResponseResolver
   allowedMimeTypes?: string[]
   maxFileSize: number
+  imgUploadHeaders?: Record<string, string>
 }
 
 export interface ImageUploaderExtensionStorage {
