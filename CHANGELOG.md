@@ -4,6 +4,24 @@
 
 - Nothing yet.
 
+## 2.1.0 - 2026-04-28
+
+Diff baseline: `v2.0.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Added
+
+- `imgUploadHeaders` option on `editorOptions` — pass a `Record<string, string>` of HTTP headers (e.g. `Authorization`) to include in every image upload request. Documented in README.
+
+### Fixed
+
+- Code block background is now a solid `bg-neutral-900` (light mode) / `bg-neutral-800` (dark mode) with `text-neutral-100`, replacing the previous semi-transparent `bg-foreground/50` that caused a blur effect and made text invisible in dark mode.
+- Drag handle dropdown actions (duplicate block, delete, copy to clipboard, reset formatting) now execute correctly. The `onAction` handler was previously only calling `console.log`.
+- Slash command `/` menu now appears above dialogs and modals. Positioning strategy switched from `absolute` to `fixed` and z-index raised to `9999`.
+
 ## 2.0.0 - 2026-04-03
 
 Diff baseline: `v1.6.5`
