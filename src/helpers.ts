@@ -403,7 +403,7 @@ export const unsetLink = (editor: Editor) => {
   }
 }
 
-export const uploadWithProgress = async ({ file, url, onProgress, signal }: { file: File, url: string, onProgress: (percent: number) => boolean | void, signal?: AbortSignal }): Promise<Record<string, unknown>> => {
+export const uploadWithProgress = async ({ file, url, onProgress, signal, headers }: { file: File, url: string, onProgress: (percent: number) => boolean | void, signal?: AbortSignal, headers?: Record<string, string> }): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     
@@ -455,6 +455,13 @@ export const uploadWithProgress = async ({ file, url, onProgress, signal }: { fi
     formData.append('file', file)
 
     xhr.open('POST', url)
+
+    if (headers) {
+      Object.entries(headers).forEach(([key, value]) => {
+        xhr.setRequestHeader(key, value)
+      })
+    }
+
     xhr.send(formData)
   })
 }

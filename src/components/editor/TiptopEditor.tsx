@@ -27,6 +27,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
     const {
       imgUploadUrl,
       imgUploadResponseKey,
+      imgUploadHeaders,
       disableDefaultContainer = false,
       showDragHandle = true,
       extraExtensions = [],
@@ -35,8 +36,8 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
     } = editorOptions
 
     const builtInExtensions = useMemo(
-      () => createDefaultExtensions({ imgUploadUrl, imgUploadResponseKey }),
-      [imgUploadResponseKey, imgUploadUrl]
+      () => createDefaultExtensions({ imgUploadUrl, imgUploadResponseKey, imgUploadHeaders }),
+      [imgUploadResponseKey, imgUploadUrl, imgUploadHeaders]
     )
 
     const extensions = useMemo(() => [
@@ -59,10 +60,12 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       extraExtensionsKey,
       imgUploadUrl,
       imgUploadResponseKey,
+      imgUploadHeaders,
     ], [
       extraExtensionsKey,
       imgUploadResponseKey,
       imgUploadUrl,
+      imgUploadHeaders,
       optionsKey,
     ])
 

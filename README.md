@@ -237,6 +237,12 @@ export function EditorWithSlots() {
   Controls whether the block drag handle is rendered. Default: `true`.
 - `extraExtensions`
   Appends custom Tiptap extensions after the built-in editor set.
+- `imgUploadUrl`
+  The URL of the server endpoint that receives image uploads.
+- `imgUploadResponseKey`
+  Locates the image URL in the server response. Accepts a top-level key, a dot-separated path, a path array, or a resolver function.
+- `imgUploadHeaders`
+  Custom HTTP headers sent with every image upload request (e.g. `Authorization`).
 
 ## Built-in Extensions
 
@@ -366,6 +372,33 @@ The editor sends a `POST` request with `multipart/form-data` and the file under 
     }}
   />
   ```
+
+### Sending custom headers
+
+Use `imgUploadHeaders` to attach custom HTTP headers to every upload request. This is the standard way to pass an authorization token or any other API header.
+
+```tsx
+<TiptopEditor
+  editorOptions={{
+    imgUploadUrl: '/api/upload',
+    imgUploadResponseKey: 'url',
+    imgUploadHeaders: {
+      Authorization: 'Bearer YOUR_TOKEN',
+    },
+  }}
+/>
+```
+
+Multiple headers are supported:
+
+```tsx
+imgUploadHeaders: {
+  Authorization: 'Bearer YOUR_TOKEN',
+  'X-Api-Key': 'YOUR_API_KEY',
+}
+```
+
+> **Note**: The editor sends `multipart/form-data`. Do **not** include a `Content-Type` header in `imgUploadHeaders` — the browser sets it automatically with the correct boundary string.
 
 Your server response must include the uploaded image URL at the location you describe with `imgUploadResponseKey`.
 

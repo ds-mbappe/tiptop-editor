@@ -15,7 +15,7 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
 
   computePosition(virtualElement, element, {
     placement: 'bottom-start',
-    strategy: 'absolute',
+    strategy: 'fixed',
     middleware: [shift(), flip()],
   }).then(({ x, y, strategy }) => {
     element.style.width = 'max-content'
@@ -67,7 +67,7 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
           editor: props.editor,
         });
 
-        (reactRenderer.element as HTMLElement).style.position = 'absolute';
+        (reactRenderer.element as HTMLElement).style.position = 'fixed';
 
         document.body.appendChild(reactRenderer.element)
 

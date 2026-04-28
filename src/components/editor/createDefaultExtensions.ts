@@ -20,11 +20,13 @@ import { ImageUploadResponseResolver } from '../../types'
 interface CreateDefaultExtensionsOptions {
   imgUploadUrl?: string
   imgUploadResponseKey?: ImageUploadResponseResolver
+  imgUploadHeaders?: Record<string, string>
 }
 
 export const createDefaultExtensions = ({
   imgUploadUrl,
   imgUploadResponseKey,
+  imgUploadHeaders,
 }: CreateDefaultExtensionsOptions): Extensions => [
   StarterKit.configure({
     bulletList: false,
@@ -71,6 +73,7 @@ export const createDefaultExtensions = ({
   ImageUploaderExtension.configure({
     imgUploadUrl,
     imgUploadResponseKey,
+    imgUploadHeaders,
   }),
   SlashCommand.configure({
     suggestion: SlashCommandSuggestion
