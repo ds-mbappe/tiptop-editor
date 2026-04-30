@@ -4,6 +4,35 @@
 
 - Nothing yet.
 
+## 2.2.0 - 2026-04-30
+
+Diff baseline: `v2.1.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Added
+
+- **Comment system.** A full inline and block comment system designed for review / view mode.
+  - `CommentsProvider` — context provider that holds all comment state. Accepts `initialComments` and an `onCommentsChange` callback for backend sync.
+  - `useComments()` — read and mutate comment state (add, remove, resolve, reply, set active).
+  - `useCommentActions()` — `submit`, `resolve`, and `remove` helpers that coordinate the Tiptap mark and the context in one call.
+  - `CommentMark` — inline Tiptap mark that highlights a text range with a `data-comment-id` attribute.
+  - `NodeCommentExtension` — block-level Tiptap extension that attaches a comment to a whole node.
+  - `CommentSelectionMenu` — bubble menu shown on text selection in view mode with an "Add comment" button.
+  - `showCommentMenu` option on `TiptopEditor` — when `true`, registers the comment extensions and renders the selection menu.
+  - New exported types: `TiptopComment`, `TiptopCommentReply`, `PendingComment`, `CommentsContextValue`.
+
+### Fixed
+
+- Emoji suggestion menu (`:` trigger) now renders above overlapping content. `z-index: 9999` added to the floating wrapper element, matching the existing fix for the slash command menu.
+- Slash command menu (`/` trigger): `z-[9999]` removed from the `SlashCommandList` container CSS class — z-index is now applied at the floating wrapper level by `updatePosition`, which is the correct layer.
+
+### Changed
+
+- `TextSelectionMenu`: removed hover-delay and fade-animation logic (`isVisible`, `isAnimating`, `timeoutRef`, `isHoveringRef`). The menu now relies on BubbleMenu's native show/hide behavior.
+
 ## 2.1.0 - 2026-04-28
 
 Diff baseline: `v2.0.0`

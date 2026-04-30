@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button, Dropdown, Label } from '@heroui/react'
+import { MessageSquarePlus } from 'lucide-react'
 import TiptopEditor from './TiptopEditor'
 import { useTiptopEditor } from './TiptopEditorContext'
+import { CommentsProvider } from '../comment/CommentsContext'
+import { useComments } from '../comment/useComments'
 
 const defaultContent = `
   <h1>Tiptop Editor</h1>
@@ -161,4 +164,71 @@ export const WithDragHandleSlot: Story = {
       ),
     },
   },
+}
+
+// ─── WithComments story ───────────────────────────────────────────────────────
+
+const commentsContent = `
+  <h1>Document with Comments</h1>
+  <p>Select any text and click the <strong>comment icon</strong> in the floating toolbar to add an inline comment.</p>
+  <p>To add a block-level comment, hover over a paragraph and open the drag handle menu — you'll find an <strong>Add comment</strong> option there.</p>
+  <p>Click a highlighted comment in the editor to jump to its thread in the sidebar.</p>
+  <h2>How comments work</h2>
+  <p>Inline comments wrap a text range with a yellow highlight mark. Block comments add a left border to the entire paragraph. Both kinds appear in the sidebar on the right.</p>
+  <p>From the sidebar you can reply, resolve (removes the highlight), or delete a comment entirely.</p>
+`
+
+/**
+ * A Dropdown.Section placed inside the drag handle dropdown.
+ * When pressed it snapshots the current NodeSelection (set by the
+ * drag handle when the menu opens) and opens the sidebar form.
+ */
+const NodeCommentButton = () => {
+  const editor = useTiptopEditor()
+  const comments = useComments()
+
+  if (!editor || !comments) return null
+
+  return (
+    <Dropdown.Section>
+      <Dropdown.Item
+        id="add_node_comment"
+        textValue="Add comment"
+        onPress={() => {
+          comments.setPendingComment({
+            id: crypto.randomUUID(),
+            type: 'node',
+            nodePos: editor.state.selection.from,
+          })
+        }}
+      >
+        <MessageSquarePlus size={16} />
+        <Label>Add comment</Label>
+      </Dropdown.Item>
+    </Dropdown.Section>
+  )
+}
+
+export const WithComments: Story = {
+  args: {
+    editorOptions: {
+      content: commentsContent,
+      immediatelyRender: false,
+      editable: false,
+      showCommentMenu: true,
+    },
+  },
+  render: args => (
+    <CommentsProvider>
+      <div className="flex items-start gap-0">
+        <TiptopEditor
+          {...args}
+          className="flex-1 min-w-0"
+          slots={{
+            dragHandleDropdown: <NodeCommentButton />,
+          }}
+        />
+      </div>
+    </CommentsProvider>
+  ),
 }

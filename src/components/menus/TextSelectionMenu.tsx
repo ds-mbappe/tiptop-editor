@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { BubbleMenu } from '@tiptap/react/menus';
 import { Separator } from '@heroui/react';
 import EditorButton from '../ui/EditorButton';
@@ -11,11 +11,7 @@ import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from 
 import { TextSelectionMenuProps } from '../../types';
 
 const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [isInTable, setIsInTable] = useState(() => editor.isActive('table'));
-  const timeoutRef = useRef<NodeJS.Timeout>(null);
-  const isHoveringRef = useRef(false);
 
   const formattingButtons = useMemo(
     () => [
@@ -29,53 +25,26 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   );
 
   const shouldShow = useCallback(() => {
-    if (isHoveringRef.current) return true;
     return editor.isEditable && isTextSelected(editor) && hasTextNodeInSelection(editor) && !isForbiddenNodeSelected(editor);
   }, [editor]);
 
-  const handleShow = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsVisible(true);
-    setTimeout(() => setIsAnimating(true), 10);
-  }, []);
-
-  const handleHide = useCallback(() => {
-    if (isHoveringRef.current) return;
-    setIsAnimating(false);
-    timeoutRef.current = setTimeout(() => setIsVisible(false), 200);
-  }, []);
-
   useEffect(() => {
     const update = () => setIsInTable(editor.isActive('table'));
-
     editor.on('selectionUpdate', update);
     editor.on('transaction', update);
-
     return () => {
       editor.off('selectionUpdate', update);
       editor.off('transaction', update);
     };
   }, [editor]);
 
-  useEffect(() => {
-    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  }, []);
-
   return (
-    <BubbleMenu
-      editor={editor}
-      updateDelay={200}
-      options={{ offset: 3, onShow: handleShow, onHide: handleHide }}
-      shouldShow={shouldShow}
-    >
-      <div
-        onMouseEnter={() => { isHoveringRef.current = true; }}
-        onMouseLeave={() => { isHoveringRef.current = false; }}
-        className={
-          `bubble-menu transition-all duration-200 ease-in-out
-          ${isVisible && isAnimating ? 'opacity-100' : 'opacity-0'}`
-        }
-      >
+    <BubbleMenu editor={editor} updateDelay={200} shouldShow={shouldShow} options={{
+      offset: {
+        alignmentAxis: 10
+      },
+    }}>
+      <div className='bubble-menu'>
         {prepend && (
           <div className='flex items-center gap-1'>
             {prepend}
@@ -100,7 +69,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
         <Separator orientation='vertical' className='h-6' />
 
         <LinkButtonMenu editor={editor} />
-        
+
         <ColorButtonMenu editor={editor} />
 
         <Separator orientation='vertical' className='h-6' />

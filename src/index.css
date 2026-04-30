@@ -291,10 +291,6 @@
     @apply rounded-md decoration-clone text-inherit px-1 py-0.5;
   }
 
-  /* Bubble Menu animation styles */
-  .bubble-menu {
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
 
   /* Link styles */
   a {
@@ -305,7 +301,42 @@
   .node-imageUploader {
     @apply my-8
   }
+
+  /* ── Inline comment mark ─────────────────────────────────────────────── */
+  .tiptop-comment {
+    @apply bg-warning/20 border-b-2 border-warning rounded-sm cursor-pointer;
+    transition: background-color 0.15s;
+  }
+
+  .tiptop-comment:hover {
+    @apply bg-warning/35;
+  }
+
+  /* ── Node (block) comment decoration ────────────────────────────────── */
+  .tiptop-node-comment {
+    @apply border-l-4 border-warning relative;
+    padding-left: 0.75rem;
+  }
 }
+
+/* ── Bubble Menu ─────────────────────────────────────────────────────────────
+   Tiptap removes/re-appends the BubbleMenu element from the DOM on each
+   hide/show, so the @keyframes animation fires naturally on every entry.
+   Must be top-level — the menu is rendered outside .ProseMirror. */
+/* .bubble-menu {
+  animation: bubble-menu-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes bubble-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+} */
 
 .ProseMirror ::selection {
   @apply bg-accent-soft dark:bg-cyan-700;

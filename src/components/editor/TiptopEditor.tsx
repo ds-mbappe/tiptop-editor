@@ -11,6 +11,9 @@ import { renderTiptopSlot } from './renderTiptopSlot'
 import { useDuplicateExtensionWarnings } from './useDuplicateExtensionWarnings'
 import { getDocumentMap, applyTargetedUpdate, applyTargetedUpdates } from '../../helpers'
 import type { TargetedUpdate } from '../../types'
+import CommentSelectionMenu from '../comment/CommentSelectionMenu'
+import CommentMark from '../../extensions/comment/CommentMark'
+import NodeCommentExtension from '../../extensions/comment/NodeCommentExtension'
 
 import 'prosemirror-view/style/prosemirror.css'
 
@@ -30,6 +33,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       imgUploadHeaders,
       disableDefaultContainer = false,
       showDragHandle = true,
+      showCommentMenu = false,
       extraExtensions = [],
       editable,
       ...tiptapEditorOptions
@@ -40,10 +44,16 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       [imgUploadResponseKey, imgUploadUrl, imgUploadHeaders]
     )
 
+    const commentExtensions = useMemo(
+      () => showCommentMenu ? [CommentMark, NodeCommentExtension] : [],
+      [showCommentMenu]
+    )
+
     const extensions = useMemo(() => [
       ...builtInExtensions,
+      ...commentExtensions,
       ...extraExtensions,
-    ], [builtInExtensions, extraExtensions])
+    ], [builtInExtensions, commentExtensions, extraExtensions])
 
     useDuplicateExtensionWarnings(builtInExtensions, extraExtensions)
 
@@ -124,6 +134,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
                 prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
                 append={renderTiptopSlot(slots.tableMenuAppend, editor)}
               />
+              {showCommentMenu && <CommentSelectionMenu editor={editor} />}
             </>
           }
           <EditorContent

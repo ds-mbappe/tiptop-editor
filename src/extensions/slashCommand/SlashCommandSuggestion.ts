@@ -15,14 +15,22 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
 
   computePosition(virtualElement, element, {
     placement: 'bottom-start',
-    strategy: 'fixed',
     middleware: [shift(), flip()],
-  }).then(({ x, y, strategy }) => {
-    element.style.width = 'max-content'
-    element.style.position = strategy
-    element.style.left = `${x}px`
-    element.style.top = `${y}px`
+  }).then(pos => {
+    Object.assign(element.style, {
+      width: 'max-content',
+      left: `${pos.x}px`,
+      top: `${pos.y}px`,
+      position: pos.strategy === 'fixed' ? 'fixed' : 'absolute',
+      zIndex: '9999'
+    })
   })
+  // }).then(({ x, y, strategy }) => {
+  //   element.style.width = 'max-content'
+  //   element.style.position = pos.strategy === 'fixed' ? 'fixed' : 'absolute'
+  //   element.style.left = `${x}px`
+  //   element.style.top = `${y}px`
+  // })
 }
 
 const SlashCommandSuggestion: SlashCommandSuggestionOptions = {

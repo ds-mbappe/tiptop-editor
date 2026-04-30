@@ -40,6 +40,15 @@ export type TiptopEditorOptions = Omit<Partial<UseEditorOptions & {
  */
   showDragHandle?: boolean
   /**
+ * Enables the comment system. When `true`:
+ * - The `CommentMark` and `NodeCommentExtension` extensions are added automatically.
+ * - A `CommentSelectionMenu` bubble menu is rendered that appears on text selection
+ *   when the editor is in view mode (`editable: false`).
+ * - Wrap the editor with `CommentsProvider` and add your own comment drawer using `useComments()` and `useCommentActions()`.
+ * @default false
+ */
+  showCommentMenu?: boolean
+  /**
  * Additional Tiptap extensions to append after the built-in editor set.
  * Use this to add feature-specific extensions like AI commands or collaboration.
  * @default undefined
@@ -219,6 +228,43 @@ export interface TiptopEditorHandle {
 
 export interface KeyDownRef {
   onKeyDown: (props: { event: KeyboardEvent }) => boolean;
+}
+
+// ─── Comments ────────────────────────────────────────────────────────────────
+
+export interface TiptopCommentReply {
+  id: string
+  content: string
+  author?: string
+  createdAt: Date
+}
+
+export interface TiptopComment {
+  id: string
+  /** 'inline' — applied to a text range via a mark. 'node' — applied to a whole block node. */
+  type: 'inline' | 'node'
+  content: string
+  author?: string
+  createdAt: Date
+  replies: TiptopCommentReply[]
+  resolved: boolean
+}
+
+export type PendingComment =
+  | { id: string; type: 'inline'; from: number; to: number }
+  | { id: string; type: 'node'; nodePos: number }
+
+export interface CommentsContextValue {
+  comments: TiptopComment[]
+  activeCommentId: string | null
+  pendingComment: PendingComment | null
+  addComment: (id: string, type: 'inline' | 'node', content: string, author?: string) => void
+  removeComment: (id: string) => void
+  resolveComment: (id: string) => void
+  replyToComment: (commentId: string, content: string, author?: string) => void
+  setActiveCommentId: (id: string | null) => void
+  setPendingComment: (comment: PendingComment | null) => void
+  getComment: (id: string) => TiptopComment | undefined
 }
 
 export interface ImageUploaderExtensionOptions {

@@ -18,6 +18,7 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
       left: `${pos.x}px`,
       top: `${pos.y}px`,
       position: pos.strategy === 'fixed' ? 'fixed' : 'absolute',
+      zIndex: '9999',
     })
   })
 }

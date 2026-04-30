@@ -412,6 +412,229 @@ Example:
 }
 ```
 
+## Comments
+
+The package ships a full inline and block comment system designed for **review / view mode**. Comments are stored entirely in the calling app — the package exposes hooks and callbacks so you can persist and sync with your own API.
+
+### Comment types
+
+| Type | What it annotates | How it looks |
+|------|------------------|--------------|
+| `inline` | A selected text range | Yellow underline highlight on the text |
+| `node` | An entire block (paragraph, heading, …) | Left amber border on the block |
+
+### Quick setup
+
+Wrap the editor in `CommentsProvider`, pass `showCommentMenu: true` and `editable: false` to put the editor into view mode, then render your own comment drawer next to it.
+
+```tsx
+import { TiptopEditor, CommentsProvider, useComments, useCommentActions } from 'tiptop-editor'
+import { Dropdown, Label } from '@heroui/react'
+import { MessageSquarePlus } from 'lucide-react'
+import { useTiptopEditor } from 'tiptop-editor'
+
+// Optional: lets users add block-level comments from the drag-handle menu
+function NodeCommentButton() {
+  const editor = useTiptopEditor()
+  const comments = useComments()
+
+  if (!editor || !comments) return null
+
+  return (
+    <Dropdown.Section>
+      <Dropdown.Item
+        id="add_node_comment"
+        textValue="Add comment"
+        onPress={() => {
+          comments.setPendingComment({
+            id: crypto.randomUUID(),
+            type: 'node',
+            nodePos: editor.state.selection.from,
+          })
+        }}
+      >
+        <MessageSquarePlus size={16} />
+        <Label>Add comment</Label>
+      </Dropdown.Item>
+    </Dropdown.Section>
+  )
+}
+
+export function ReviewPage() {
+  return (
+    <CommentsProvider>
+      <div style={{ display: 'flex' }}>
+        <TiptopEditor
+          editorOptions={{
+            content: '<p>Document content…</p>',
+            immediatelyRender: false,
+            editable: false,
+            showCommentMenu: true,
+          }}
+          slots={{
+            dragHandleDropdown: <NodeCommentButton />,
+          }}
+        />
+        {/* Your own drawer component here — see "Building a custom comment drawer" below */}
+      </div>
+    </CommentsProvider>
+  )
+}
+```
+
+> `showCommentMenu: true` registers the `CommentMark` and `NodeCommentExtension` Tiptap extensions and renders the floating "Add comment" button that appears on text selection.
+
+### Persisting comments with your API
+
+`CommentsProvider` accepts an `onCommentsChange` callback that fires whenever the comment list changes. Use it to sync with your backend.
+
+```tsx
+import { useState } from 'react'
+import { CommentsProvider, TiptopEditor } from 'tiptop-editor'
+import type { TiptopComment } from 'tiptop-editor'
+
+export function ReviewPage() {
+  const [initialComments] = useState<TiptopComment[]>([
+    // Comments loaded from your API on mount
+  ])
+
+  const handleCommentsChange = async (comments: TiptopComment[]) => {
+    await fetch('/api/documents/123/comments', {
+      method: 'PUT',
+      body: JSON.stringify(comments),
+    })
+  }
+
+  return (
+    <CommentsProvider
+      initialComments={initialComments}
+      onCommentsChange={handleCommentsChange}
+    >
+      <div style={{ display: 'flex' }}>
+        <TiptopEditor
+          editorOptions={{
+            content: '<p>…</p>',
+            editable: false,
+            showCommentMenu: true,
+            immediatelyRender: false,
+          }}
+        />
+        {/* Your own drawer here */}
+      </div>
+    </CommentsProvider>
+  )
+}
+```
+
+`onCommentsChange` receives the full updated array after every add, resolve, reply, or delete. It fires synchronously after the state update — debounce or batch API calls on your side as needed.
+
+### Loading existing comments
+
+Pass your persisted comments as `initialComments` to `CommentsProvider`. The comment marks in the editor HTML already carry a `data-comment-id` attribute, so the sidebar threads reconnect automatically as long as the IDs match.
+
+> The editor content (HTML string with mark attributes) and the comments array are two separate things to persist. Store both and restore both — the HTML goes into `editorOptions.content`, the comments go into `initialComments`.
+
+### Reading comment state programmatically
+
+Use `useComments()` anywhere inside `CommentsProvider` to read or mutate the comment state directly.
+
+```tsx
+import { useComments } from 'tiptop-editor'
+
+function CommentCount() {
+  const comments = useComments()
+  if (!comments) return null
+
+  const open = comments.comments.filter(c => !c.resolved).length
+  return <span>{open} open comment{open !== 1 ? 's' : ''}</span>
+}
+```
+
+Available values and actions from `useComments()`:
+
+| Name | Type | Description |
+|------|------|-------------|
+| `comments` | `TiptopComment[]` | All comments (open and resolved) |
+| `activeCommentId` | `string \| null` | ID of the currently focused comment |
+| `pendingComment` | `PendingComment \| null` | Comment being drafted (not yet submitted) |
+| `addComment` | `(id, type, content, author?) => void` | Finalize a pending comment |
+| `removeComment` | `(id) => void` | Delete a comment from the context (use `useCommentActions().remove` to also strip the editor mark) |
+| `resolveComment` | `(id) => void` | Mark as resolved in the context (use `useCommentActions().resolve` to also strip the editor mark) |
+| `replyToComment` | `(commentId, content, author?) => void` | Append a reply |
+| `setActiveCommentId` | `(id \| null) => void` | Highlight a comment thread |
+| `setPendingComment` | `(PendingComment \| null) => void` | Open the new-comment form |
+| `getComment` | `(id) => TiptopComment \| undefined` | Look up a single comment |
+
+### Building a custom comment drawer
+
+The package does not ship a styled sidebar — you build your own. The only non-obvious part is that resolving or deleting a comment requires two coordinated steps: removing the mark from the editor **and** updating the context. The `useCommentActions` hook handles both so you don't have to.
+
+```tsx
+import {
+  TiptopEditor,
+  CommentsProvider,
+  useComments,
+  useCommentActions,
+} from 'tiptop-editor'
+
+function MyCommentDrawer() {
+  const ctx = useComments()
+  const { submit, resolve, remove } = useCommentActions()
+
+  if (!ctx) return null
+  const { comments, pendingComment, activeCommentId, setActiveCommentId } = ctx
+
+  return (
+    <aside>
+      {/* New comment form — shown when the user clicks "Add comment" */}
+      {pendingComment && (
+        <form onSubmit={e => {
+          e.preventDefault()
+          const text = new FormData(e.currentTarget).get('comment') as string
+          submit(pendingComment, text)
+        }}>
+          <textarea name="comment" placeholder="Add a comment…" autoFocus />
+          <button type="submit">Save</button>
+          <button type="button" onClick={() => ctx.setPendingComment(null)}>Cancel</button>
+        </form>
+      )}
+
+      {/* Comment threads */}
+      {comments.map(comment => (
+        <div
+          key={comment.id}
+          data-active={activeCommentId === comment.id || undefined}
+          onClick={() => setActiveCommentId(comment.id)}
+        >
+          <p>{comment.content}</p>
+          <button onClick={e => { e.stopPropagation(); resolve(comment.id) }}>Resolve</button>
+          <button onClick={e => { e.stopPropagation(); remove(comment.id) }}>Delete</button>
+        </div>
+      ))}
+    </aside>
+  )
+}
+
+export function ReviewPage() {
+  return (
+    <CommentsProvider onCommentsChange={comments => saveToApi(comments)}>
+      <div style={{ display: 'flex' }}>
+        <TiptopEditor editorOptions={{ editable: false, showCommentMenu: true, immediatelyRender: false }} />
+        <MyCommentDrawer />
+      </div>
+    </CommentsProvider>
+  )
+}
+```
+
+`useCommentActions` provides three methods:
+
+| Method | Description |
+|--------|-------------|
+| `submit(pending, content, author?)` | Applies the pending comment to the editor (adds the mark/attribute) and registers it in the context |
+| `resolve(commentId)` | Removes the mark/attribute from the editor and marks the comment as resolved |
+| `remove(commentId)` | Removes the mark/attribute from the editor and deletes the comment from the context |
+
 ## Notes
 
 - If you use SSR, keep `immediatelyRender: false`.
