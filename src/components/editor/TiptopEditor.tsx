@@ -12,6 +12,7 @@ import { useDuplicateExtensionWarnings } from './useDuplicateExtensionWarnings'
 import { getDocumentMap, applyTargetedUpdate, applyTargetedUpdates } from '../../helpers'
 import type { TargetedUpdate } from '../../types'
 import CommentSelectionMenu from '../comment/CommentSelectionMenu'
+import LinkPreviewMenu from '../menus/LinkPreviewMenu'
 import CommentMark from '../../extensions/comment/CommentMark'
 import NodeCommentExtension from '../../extensions/comment/NodeCommentExtension'
 
@@ -134,6 +135,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
                 prepend={renderTiptopSlot(slots.tableMenuPrepend, editor)}
                 append={renderTiptopSlot(slots.tableMenuAppend, editor)}
               />
+              <LinkPreviewMenu editor={editor} />
               {showCommentMenu && <CommentSelectionMenu editor={editor} />}
             </>
           }

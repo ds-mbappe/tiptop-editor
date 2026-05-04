@@ -4,6 +4,24 @@
 
 - Nothing yet.
 
+## 2.3.0 - 2026-05-04
+
+Diff baseline: `v2.2.0`
+
+### Breaking Changes
+
+- None identified.
+
+### Added
+
+- **Link preview in edit mode.** Placing the cursor inside a linked text (without making a selection) now shows a floating bubble menu with the URL, an "Open in new tab" button, and a "Remove link" button. The preview is hidden while text is selected so it does not conflict with the main TextSelectionMenu.
+
+### Fixed
+
+- **BubbleMenu z-index.** All floating selection menus (TextSelectionMenu, TableSelectionMenu, CommentSelectionMenu) now correctly appear above content with high z-index such as fixed navbars. The fix applies `z-index: 9999` to the outer positioned wrapper that Tiptap controls, which was previously left without an explicit z-index.
+- **Slash command menu height.** Added the `size()` Floating UI middleware so the slash command menu is capped to the available viewport height when triggered near the top or bottom of the screen. The menu scrolls internally and keeps its rounded corners.
+- **Link popover closes after setting a URL.** The link input popover in the TextSelectionMenu now closes automatically when the URL is confirmed (Enter key or confirm button), instead of staying open.
+
 ## 2.2.0 - 2026-04-30
 
 Diff baseline: `v2.1.0`

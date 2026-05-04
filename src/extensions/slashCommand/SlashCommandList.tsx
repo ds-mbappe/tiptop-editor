@@ -63,7 +63,8 @@ const SlashCommandList = forwardRef<KeyDownRef, {
   return (
     <div
       aria-label="Command menu"
-      className='w-[200px] bg-background border shadow rounded-2xl flex flex-col gap-2 p-2.5 relative'
+      className='w-[200px] bg-background border shadow rounded-2xl flex flex-col gap-2 p-2.5 relative overflow-y-auto'
+      style={{ maxHeight: 'var(--slash-available-height, none)' }}
     >
       {items.length > 0 ? (
         items.map((group, groupIndex) => (

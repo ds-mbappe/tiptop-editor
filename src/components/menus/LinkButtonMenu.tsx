@@ -38,6 +38,7 @@ const LinkButtonMenu = ({ editor }: LinkButtonMenuProps) => {
     if (!linkValue) return;
     addOrUpdateLink(editor, linkValue);
     setIsActive(true);
+    setMenuOpened(false);
   }, [editor, linkValue]);
 
   const openInNewTab = useCallback(() => {

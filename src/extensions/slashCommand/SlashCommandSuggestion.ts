@@ -1,4 +1,4 @@
-import { computePosition, flip, shift } from '@floating-ui/dom'
+import { computePosition, flip, shift, size } from '@floating-ui/dom'
 import { Editor, posToDOMRect, ReactRenderer } from '@tiptap/react'
 import { PluginKey } from '@tiptap/pm/state'
 
@@ -15,22 +15,24 @@ const updatePosition = (editor: Editor, element: HTMLElement) => {
 
   computePosition(virtualElement, element, {
     placement: 'bottom-start',
-    middleware: [shift(), flip()],
+    middleware: [
+      flip(),
+      shift(),
+      size({
+        apply({ availableHeight, elements }) {
+          elements.floating.style.setProperty('--slash-available-height', `${Math.max(availableHeight - 8, 0)}px`)
+        },
+      }),
+    ],
   }).then(pos => {
     Object.assign(element.style, {
       width: 'max-content',
       left: `${pos.x}px`,
       top: `${pos.y}px`,
       position: pos.strategy === 'fixed' ? 'fixed' : 'absolute',
-      zIndex: '9999'
+      zIndex: '9999',
     })
   })
-  // }).then(({ x, y, strategy }) => {
-  //   element.style.width = 'max-content'
-  //   element.style.position = pos.strategy === 'fixed' ? 'fixed' : 'absolute'
-  //   element.style.left = `${x}px`
-  //   element.style.top = `${y}px`
-  // })
 }
 
 const SlashCommandSuggestion: SlashCommandSuggestionOptions = {

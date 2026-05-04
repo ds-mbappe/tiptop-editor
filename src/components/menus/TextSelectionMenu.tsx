@@ -39,7 +39,7 @@ const TextSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps) 
   }, [editor]);
 
   return (
-    <BubbleMenu editor={editor} updateDelay={200} shouldShow={shouldShow} options={{
+    <BubbleMenu ref={(el) => { if (el) el.style.zIndex = '9999' }} editor={editor} updateDelay={200} shouldShow={shouldShow} options={{
       offset: {
         alignmentAxis: 10
       },

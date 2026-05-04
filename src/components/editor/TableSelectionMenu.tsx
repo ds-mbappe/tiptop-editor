@@ -15,6 +15,7 @@ const TableSelectionMenu = ({ editor, prepend, append }: TextSelectionMenuProps)
 
   return (
     <BubbleMenu
+      ref={(el) => { if (el) el.style.zIndex = '9999' }}
       editor={editor}
       updateDelay={200}
       options={{ offset: 3 }}
