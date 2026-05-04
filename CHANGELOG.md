@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.3.1 - 2026-05-05
+
+Diff baseline: `v2.3.0`
+
+### Fixed
+
+- **Crash when typing `/` or `:`** — `onUpdate`, `onKeyDown`, and `onExit` in both the slash command and emoji suggestion handlers now guard against `reactRenderer` being `undefined`. The crash occurred when `onStart` returned early (because `props.clientRect` was falsy) and the plugin was later destroyed or the suggestion exited — the editor then called `onExit` on an uninitialised renderer.
+
 ## 2.3.0 - 2026-05-04
 
 Diff baseline: `v2.2.0`

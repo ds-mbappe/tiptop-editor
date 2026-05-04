@@ -85,6 +85,8 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
       },
 
       onUpdate(props: SuggestionProps) {
+        if (!reactRenderer) return
+
         reactRenderer.updateProps(props)
 
         if (!props.clientRect) {
@@ -95,12 +97,12 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
       },
 
       onKeyDown(props: SuggestionKeyDownProps) {
+        if (!reactRenderer) return false
+
         if (props.event.key === 'Escape') {
           reactRenderer.destroy()
           reactRenderer.element.remove()
-
           reactRenderer.editor.commands.setMeta('lockDragHandle', false)
-
           return true
         }
 
@@ -108,9 +110,10 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
       },
 
       onExit() {
+        if (!reactRenderer) return
+
         reactRenderer.destroy()
         reactRenderer.element.remove()
-
         reactRenderer.editor.commands.setMeta('lockDragHandle', false)
       },
     }

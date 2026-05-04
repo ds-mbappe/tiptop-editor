@@ -60,6 +60,8 @@ export default {
       },
 
       onUpdate(props: SuggestionProps) {
+        if (!reactRenderer) return
+
         reactRenderer.updateProps(props)
 
         if (!props.clientRect) {
@@ -70,12 +72,12 @@ export default {
       },
 
       onKeyDown(props: SuggestionKeyDownProps): boolean {
+        if (!reactRenderer) return false
+
         if (props.event.key === 'Escape') {
           reactRenderer.destroy()
           reactRenderer.element.remove()
-
           reactRenderer.editor.commands.setMeta('lockDragHandle', false)
-
           return true
         }
 
@@ -83,9 +85,10 @@ export default {
       },
 
       onExit() {
+        if (!reactRenderer) return
+
         reactRenderer.destroy()
         reactRenderer.element.remove()
-
         reactRenderer.editor.commands.setMeta('lockDragHandle', false)
       },
     }
