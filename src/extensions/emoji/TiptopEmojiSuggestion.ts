@@ -81,7 +81,11 @@ export default {
           return true
         }
 
-        return reactRenderer.ref?.onKeyDown(props) || false
+        if (!reactRenderer.ref) {
+          return ['ArrowUp', 'ArrowDown', 'Enter'].includes(props.event.key)
+        }
+
+        return reactRenderer.ref.onKeyDown(props)
       },
 
       onExit() {

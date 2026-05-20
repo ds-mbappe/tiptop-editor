@@ -106,7 +106,14 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
           return true
         }
 
-        return reactRenderer.ref?.onKeyDown(props) || false
+        // If React hasn't finished the initial render yet (ref not set),
+        // still intercept navigation keys so ProseMirror doesn't move the cursor
+        // and exit the suggestion before the list becomes interactive.
+        if (!reactRenderer.ref) {
+          return ['ArrowUp', 'ArrowDown', 'Enter'].includes(props.event.key)
+        }
+
+        return reactRenderer.ref.onKeyDown(props)
       },
 
       onExit() {

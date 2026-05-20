@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.3.2 - 2026-05-05
+
+Diff baseline: `v2.3.1`
+
+### Fixed
+
+- **Slash and emoji menus close immediately on navigation keys** — `onKeyDown` now intercepts `ArrowUp`, `ArrowDown`, and `Enter` even before the React component's ref is set. In React 18, `ReactRenderer` schedules rendering asynchronously, so `reactRenderer.ref` is `null` for at least one event loop tick after the menu opens. Pressing a navigation key in that window previously fell through to ProseMirror, which moved the cursor and exited the suggestion before the list became interactive.
+
 ## 2.3.1 - 2026-05-05
 
 Diff baseline: `v2.3.0`
