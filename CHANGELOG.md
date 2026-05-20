@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.3.3 - 2026-05-05
+
+Diff baseline: `v2.3.2`
+
+### Fixed
+
+- **Drag handle crash on unmount** — The `@tiptap/extension-drag-handle` plugin moves the drag-handle DOM element out of the React tree at runtime (`wrapper.appendChild(element)`). React's fiber still tracks the element under its original host, so on unmount it calls `host.removeChild(element)` — which throws because the element has already been re-parented. A `useLayoutEffect` cleanup now moves the element back into its React host node before React recurses into child deletion, letting `removeChild` succeed.
+
 ## 2.3.2 - 2026-05-05
 
 Diff baseline: `v2.3.1`

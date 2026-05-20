@@ -1,6 +1,6 @@
 import { Card, cn } from '@heroui/react'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { Fragment, forwardRef, useEffect, useImperativeHandle, useMemo } from 'react'
+import { Fragment, forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react'
 import TextSelectionMenu from '../menus/TextSelectionMenu'
 import { TiptopEditorHandle, TiptopEditorProps } from '../../types'
 import TableSelectionMenu from './TableSelectionMenu'
@@ -93,6 +93,29 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       }
     }, [editor, editable])
 
+    // The DragHandlePlugin moves the drag-handle div out of the React tree
+    // (wrapper.appendChild(element) + editorParent.appendChild(wrapper)).
+    // React's fiber still thinks the element is inside dragHandleHostRef, so on
+    // unmount it calls host.removeChild(element) — which fails because the element
+    // is now inside the plugin's wrapper.
+    // useLayoutEffect cleanup runs before React recurses into children's deletion
+    // effects, so moving it back here lets React's removeChild succeed.
+    const dragHandleHostRef = useRef<HTMLDivElement>(null)
+    const editorSnapshotRef = useRef(editor)
+    editorSnapshotRef.current = editor
+
+    useLayoutEffect(() => {
+      return () => {
+        const host = dragHandleHostRef.current
+        if (!host) return
+        const viewParent = editorSnapshotRef.current?.view?.dom?.parentElement
+        const dragEl = viewParent?.querySelector('.drag-handle') as HTMLElement | null
+        if (dragEl && dragEl.parentNode !== host) {
+          host.appendChild(dragEl)
+        }
+      }
+    }, [])
+
     useImperativeHandle(ref, () => ({
       getEditor: () => editor,
       on: ((...args) => {
@@ -123,7 +146,9 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
           {renderTiptopSlot(slots.editorTop, editor)}
           {editor &&
             <>
-              {showDragHandle ? <TiptopDragHandle editor={editor} dragHandleSlot={renderTiptopSlot(slots.dragHandleDropdown, editor)} /> : null}
+              <div ref={dragHandleHostRef} style={{ display: 'contents' }}>
+                {showDragHandle ? <TiptopDragHandle editor={editor} dragHandleSlot={renderTiptopSlot(slots.dragHandleDropdown, editor)} /> : null}
+              </div>
 
               <TextSelectionMenu
                 editor={editor}
