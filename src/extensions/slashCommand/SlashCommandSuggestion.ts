@@ -77,9 +77,13 @@ const SlashCommandSuggestion: SlashCommandSuggestionOptions = {
           editor: props.editor,
         });
 
-        (reactRenderer.element as HTMLElement).style.position = 'fixed';
+        const el = reactRenderer.element as HTMLElement;
+        el.style.position = 'fixed';
+        // Mark as a React Aria top-layer overlay so modals don't dismiss
+        // when the user clicks inside this menu.
+        el.setAttribute('data-react-aria-top-layer', 'true');
 
-        document.body.appendChild(reactRenderer.element)
+        document.body.appendChild(el)
 
         updatePosition(props.editor, reactRenderer.element as HTMLElement);
       },

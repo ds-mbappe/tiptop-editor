@@ -52,8 +52,9 @@ export default {
         reactRenderer = new ReactRenderer(EmojiList, {
           props,
           editor: props.editor,
-        })
+        });
 
+        (reactRenderer.element as HTMLElement).setAttribute('data-react-aria-top-layer', 'true');
         document.body.appendChild(reactRenderer.element)
 
         updatePosition(props.editor, reactRenderer.element as HTMLElement)

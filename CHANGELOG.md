@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.3.4 - 2026-05-21
+
+Diff baseline: `v2.3.3`
+
+### Fixed
+
+- **Slash and emoji menus dismiss modals on click** — Added `data-react-aria-top-layer="true"` to the floating elements for both the slash command and emoji suggestion menus. React Aria uses this attribute to identify overlays that should not trigger modal dismissal when clicked inside them.
+
 ## 2.3.3 - 2026-05-05
 
 Diff baseline: `v2.3.2`
