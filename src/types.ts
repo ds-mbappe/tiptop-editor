@@ -48,6 +48,8 @@ export type TiptopEditorOptions = Omit<Partial<UseEditorOptions & {
  * @default false
  */
   showCommentMenu?: boolean
+  /** Label for the "Add comment" tooltip in the selection bubble menu. @default "Add comment" */
+  commentMenuLabel?: string
   /**
  * Additional Tiptap extensions to append after the built-in editor set.
  * Use this to add feature-specific extensions like AI commands or collaboration.

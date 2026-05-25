@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.3.5 - 2026-05-21
+
+Diff baseline: `v2.3.4`
+
+### Added
+
+- `commentMenuLabel` option on `TiptopEditor` — overrides the tooltip text on the "Add comment" button in the `CommentSelectionMenu`. Defaults to `"Add comment"`.
+
 ## 2.3.4 - 2026-05-21
 
 Diff baseline: `v2.3.3`

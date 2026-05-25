@@ -35,6 +35,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
       disableDefaultContainer = false,
       showDragHandle = true,
       showCommentMenu = false,
+      commentMenuLabel,
       extraExtensions = [],
       editable,
       ...tiptapEditorOptions
@@ -161,7 +162,7 @@ const TiptopEditor = forwardRef<TiptopEditorHandle, TiptopEditorProps>(
                 append={renderTiptopSlot(slots.tableMenuAppend, editor)}
               />
               <LinkPreviewMenu editor={editor} />
-              {showCommentMenu && <CommentSelectionMenu editor={editor} />}
+              {showCommentMenu && <CommentSelectionMenu editor={editor} label={commentMenuLabel} />}
             </>
           }
           <EditorContent

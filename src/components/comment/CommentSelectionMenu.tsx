@@ -11,7 +11,7 @@ import { hasTextNodeInSelection, isForbiddenNodeSelected, isTextSelected } from 
  * view / review mode (`editable: false`). Rendered automatically by
  * `TiptopEditor` when `showCommentMenu: true` is set.
  */
-const CommentSelectionMenu = ({ editor }: { editor: Editor }) => {
+const CommentSelectionMenu = ({ editor, label = 'Add comment' }: { editor: Editor; label?: string }) => {
   const comments = useComments()
 
   const shouldShow = useCallback(() => {
@@ -46,7 +46,7 @@ const CommentSelectionMenu = ({ editor }: { editor: Editor }) => {
             <MessageSquarePlus size={16} />
           </Button>
           <Tooltip.Content>
-            <p>Add comment</p>
+            <p>{label}</p>
           </Tooltip.Content>
         </Tooltip>
       </div>
