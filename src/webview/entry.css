@@ -1,0 +1,82 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  width: 100%;
+  background: #ffffff;
+  color: #111111;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body, #root { background: #141414; color: #ececec; }
+}
+
+#root {
+  padding: 4px 16px 160px;
+}
+
+.tiptap {
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 200px;
+}
+
+.tiptap > * + * { margin-top: 0.6em; }
+
+.tiptap p { margin-bottom: 0; }
+
+.tiptap h1 { font-size: 1.75em; font-weight: 700; line-height: 1.2; }
+.tiptap h2 { font-size: 1.35em; font-weight: 700; line-height: 1.3; }
+.tiptap h3 { font-size: 1.15em; font-weight: 600; line-height: 1.3; }
+
+.tiptap ul, .tiptap ol { padding-left: 1.4em; }
+.tiptap li { margin-bottom: 0.2em; }
+
+.tiptap blockquote {
+  border-left: 3px solid #d1d5db;
+  padding-left: 1em;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.tiptap code {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.88em;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.tiptap pre {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.tiptap pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tiptap blockquote { border-color: #4b5563; color: #9ca3af; }
+  .tiptap code { background: #374151; color: #f9fafb; }
+  .tiptap hr { border-color: #374151; }
+}

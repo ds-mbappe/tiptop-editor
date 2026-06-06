@@ -1,6 +1,6 @@
 {
   "name": "tiptop-editor",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "description": "Notion-like editor built with Tiptap v3 and HeroUI",
   "type": "module",
   "main": "./dist/tiptop-editor.umd.js",
@@ -12,7 +12,12 @@
       "import": "./dist/tiptop-editor.es.js",
       "require": "./dist/tiptop-editor.umd.js"
     },
-    "./dist/tiptop-editor.css": "./dist/tiptop-editor.css"
+    "./dist/tiptop-editor.css": "./dist/tiptop-editor.css",
+    "./webview": {
+      "types": "./dist/webview/editor.d.ts",
+      "import": "./dist/webview/editor.js",
+      "require": "./dist/webview/editor.js"
+    }
   },
   "files": [
     "dist"
@@ -31,6 +36,7 @@
     "clean": "rm -rf dist",
     "preview": "vite preview",
     "build": "npm run clean && vite build",
+    "build:webview": "vite build --config vite.webview.config.ts && node scripts/bundle-webview.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

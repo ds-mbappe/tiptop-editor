@@ -4,6 +4,16 @@
 
 - Nothing yet.
 
+## 2.4.0 - 2026-06-07
+
+Diff baseline: `v2.3.5`
+
+### Added
+
+- **React Native WebView bundle** — new `build:webview` script and `vite.webview.config.ts` that produce a fully self-contained, dependency-inlined HTML bundle (`dist/webview/editor.js`) for embedding the editor inside a `react-native-webview`. The bundle includes StarterKit, ListKit, HorizontalRule, CodeBlock (with lowlight), Highlight, TextAlign, Subscript, Superscript, and Placeholder — all features available in the web editor except drag handle, slash command, image upload, tables, emoji, and comments (those can be added incrementally).
+- **`./webview` package export** — importable as `tiptop-editor/webview`, exports `editorHtml: string` (the self-contained HTML) ready to pass to `<WebView source={{ html: editorHtml }} />`.
+- **Bidirectional postMessage bridge** — the WebView page listens for `SET_CONTENT`, `GET_CONTENT`, `SET_EDITABLE`, and `EXEC` messages from React Native and emits `READY`, `CONTENT_CHANGE`, `CONTENT_RESPONSE`, `SELECTION_CHANGE`, `FOCUS`, and `BLUR` back. Toolbar commands mapped: `toggleBold`, `toggleItalic`, `toggleStrike`, `toggleCode`, `toggleH1`, `toggleH2`, `toggleH3`, `toggleBulletList`, `toggleOrderedList`, `toggleBlockquote`, `toggleCodeBlock`, `undo`, `redo`.
+
 ## 2.3.5 - 2026-05-21
 
 Diff baseline: `v2.3.4`
