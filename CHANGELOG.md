@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.4.4 - 2026-06-07
+
+Diff baseline: `v2.4.3`
+
+### Added
+
+- **`CONTENT_HEIGHT` bridge message** — the WebView now observes `#root`'s size with a `ResizeObserver` and emits `{ type: 'CONTENT_HEIGHT', height }` whenever it changes. Lets the host size the WebView to fit its content and own scrolling with a single outer `ScrollView`, instead of nesting two competing scroll views (the page's and the editor's internal one).
+
 ## 2.4.3 - 2026-06-07
 
 Diff baseline: `v2.4.2`

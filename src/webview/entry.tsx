@@ -132,11 +132,28 @@ function App() {
     window.addEventListener('message', handle)
     document.addEventListener('message', handle as any)
 
+    // Report content height so the host can size the WebView to fit and let
+    // its own ScrollView own scrolling — letting the editor scroll internally
+    // would otherwise create two competing scroll views.
+    const root = document.getElementById('root')
+    let lastHeight = 0
+    const reportHeight = () => {
+      const height = root?.scrollHeight ?? document.body.scrollHeight
+      if (height !== lastHeight) {
+        lastHeight = height
+        send({ type: 'CONTENT_HEIGHT', height })
+      }
+    }
+    const resizeObserver = new ResizeObserver(reportHeight)
+    if (root) resizeObserver.observe(root)
+    reportHeight()
+
     send({ type: 'READY' })
 
     return () => {
       window.removeEventListener('message', handle)
       document.removeEventListener('message', handle as any)
+      resizeObserver.disconnect()
     }
   }, [editor])
 
