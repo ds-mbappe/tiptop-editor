@@ -82,11 +82,23 @@ function App() {
 
     const handle = (e: MessageEvent) => {
       let msg: any
-      try { msg = JSON.parse(typeof e.data === 'string' ? e.data : '') } catch { return }
+      try {
+        msg = JSON.parse(typeof e.data === 'string' ? e.data : '')
+      } catch (err) {
+        send({ type: 'BRIDGE_ERROR', context: 'parse', message: String(err) })
+        return
+      }
 
       switch (msg.type) {
         case 'SET_CONTENT':
-          editor.commands.setContent(msg.content ?? '')
+          // emitUpdate: false — loading content programmatically must not fire
+          // onUpdate/CONTENT_CHANGE, which would otherwise trigger an unwanted
+          // autosave of (possibly schema-reduced) content back over the original.
+          try {
+            editor.commands.setContent(msg.content ?? '', { emitUpdate: false })
+          } catch (err) {
+            send({ type: 'BRIDGE_ERROR', context: 'setContent', message: String(err) })
+          }
           break
         case 'GET_CONTENT':
           send({ type: 'CONTENT_RESPONSE', json: editor.getJSON() })

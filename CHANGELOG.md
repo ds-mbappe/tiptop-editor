@@ -4,7 +4,16 @@
 
 - Nothing yet.
 
-## 2.4.2 - 2026-06-07
+## 2.4.3 - 2026-06-07
+
+Diff baseline: `v2.4.2`
+
+### Fixed
+
+- **`SET_CONTENT` triggered an unwanted autosave loop** — `editor.commands.setContent()` defaults to `emitUpdate: true`, so loading a draft's existing content into the WebView fired `onUpdate` → `CONTENT_CHANGE`, which the host app treats as a user edit and autosaves. Loading content is now passed `{ emitUpdate: false }`, so initial content no longer triggers a save round-trip.
+- **Bridge failures were silently swallowed** — malformed/oversized `postMessage` payloads that failed `JSON.parse`, and content that `editor.commands.setContent()` rejected, were dropped without any signal. Both paths now emit a `BRIDGE_ERROR` message (`{ type: 'BRIDGE_ERROR', context, message }`) back to the host so failures surface instead of presenting an empty editor.
+
+
 
 Diff baseline: `v2.4.1`
 
