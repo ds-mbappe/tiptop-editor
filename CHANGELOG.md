@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.4.2 - 2026-06-07
+
+Diff baseline: `v2.4.1`
+
+### Fixed
+
+- **Editor failed to mount in WebView (`React error #299: Target container is not a DOM element`)** — `scripts/bundle-webview.mjs` stripped `type="module"` from the inlined `<script>` tag. Module scripts execute deferred (after the document finishes parsing); a regular inline `<script>` in `<head>` runs synchronously during parsing — before `<body>`/`#root` exist — so `createRoot(document.getElementById('root'))` threw and the WebView rendered a blank page. Fixed by keeping `type="module"` on the inlined script.
+
 ## 2.4.1 - 2026-06-07
 
 Diff baseline: `v2.4.0`

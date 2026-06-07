@@ -23,10 +23,13 @@ try { css = fs.readFileSync(path.join(dist, 'bundle.css'), 'utf-8') } catch {}
 const inlined = html
   // Replace <link ... .css ...> with inline <style>
   .replace(/<link[^>]+\.css[^>]*>/g, () => (css ? `<style>\n${css}\n</style>` : ''))
-  // Replace <script ... bundle.js ...> with inline <script>
-  .replace(/<script[^>]+bundle\.js[^>]*><\/script>/g, () => `<script>\n${js}\n</script>`)
-  // Strip module/crossorigin attrs that aren't needed when inlined
-  .replace(/\s+type="module"/g, '')
+  // Replace <script ... bundle.js ...> with inline <script>. Keep `type="module"` —
+  // module scripts execute deferred (after the document is parsed), which is required
+  // here since the script lives in <head> and reads `#root` from <body> on load.
+  // Stripping it would make the script run synchronously before <body> exists,
+  // causing `createRoot(document.getElementById('root'))` to throw (React error #299).
+  .replace(/<script[^>]+bundle\.js[^>]*><\/script>/g, () => `<script type="module">\n${js}\n</script>`)
+  // Strip the crossorigin attr — not needed for inlined scripts/styles
   .replace(/\s+crossorigin/g, '')
 
 const output = `\
