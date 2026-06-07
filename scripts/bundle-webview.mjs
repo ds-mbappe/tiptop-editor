@@ -16,11 +16,15 @@ const js   = fs.readFileSync(path.join(dist, 'bundle.js'),  'utf-8')
 let css = ''
 try { css = fs.readFileSync(path.join(dist, 'bundle.css'), 'utf-8') } catch {}
 
+// NOTE: replacements use functions (not template strings) — `js`/`css` are
+// minified bundles that can contain literal `$&`, `` $` ``, `$'` sequences,
+// which `String.replace` would otherwise interpret as special replacement
+// patterns and corrupt the output.
 const inlined = html
   // Replace <link ... .css ...> with inline <style>
-  .replace(/<link[^>]+\.css[^>]*>/g, css ? `<style>\n${css}\n</style>` : '')
+  .replace(/<link[^>]+\.css[^>]*>/g, () => (css ? `<style>\n${css}\n</style>` : ''))
   // Replace <script ... bundle.js ...> with inline <script>
-  .replace(/<script[^>]+bundle\.js[^>]*><\/script>/g, `<script>\n${js}\n</script>`)
+  .replace(/<script[^>]+bundle\.js[^>]*><\/script>/g, () => `<script>\n${js}\n</script>`)
   // Strip module/crossorigin attrs that aren't needed when inlined
   .replace(/\s+type="module"/g, '')
   .replace(/\s+crossorigin/g, '')

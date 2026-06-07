@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.4.1 - 2026-06-07
+
+Diff baseline: `v2.4.0`
+
+### Fixed
+
+- **Corrupted WebView bundle (`dist/webview/editor.js`)** — `scripts/bundle-webview.mjs` inlined the bundled JS/CSS into the HTML template via `String.replace(regex, templateString)`. Because the minified bundle contains literal `$&`, `` $` ``, `$'` sequences, `String.replace` interpreted them as special replacement patterns and spliced fragments of the HTML template into the middle of the JS, producing an unparsable `editorHtml` (the WebView rendered raw JS source as text). Fixed by passing replacement functions instead, which insert the strings literally.
+
 ## 2.4.0 - 2026-06-07
 
 Diff baseline: `v2.3.5`
