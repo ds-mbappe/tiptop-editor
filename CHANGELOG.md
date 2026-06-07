@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 2.4.5 - 2026-06-07
+
+Diff baseline: `v2.4.4`
+
+### Fixed
+
+- **Code block color in dark mode** — `.tiptap pre` had a hardcoded slate-blue background (`#1f2937`) that clashed with the WebView's dark background (`#141414`). It now uses a neutral dark surface (`#1c1c1e`) that matches the host app's dark theme.
+
 ## 2.4.4 - 2026-06-07
 
 Diff baseline: `v2.4.3`
