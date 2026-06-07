@@ -35,7 +35,7 @@
     "dev": "vite",
     "clean": "rm -rf dist",
     "preview": "vite preview",
-    "build": "npm run clean && vite build",
+    "build": "npm run clean && vite build && npm run build:webview",
     "build:webview": "vite build --config vite.webview.config.ts && node scripts/bundle-webview.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
