@@ -4,6 +4,14 @@
 
 - Nothing yet.
 
+## 3.0.0 - 2026-06-08
+
+Diff baseline: `v2.4.5`
+
+### Removed
+
+- **BREAKING: `tiptop-editor/webview` export** — the React Native WebView bundle (`editorHtml`) and its build pipeline (`src/webview/`, `vite.webview.config.ts`, `scripts/bundle-webview.mjs`) have been removed. The mobile app now uses `@10play/tentap-editor` instead of this hand-rolled WebView bridge. Consumers importing from `tiptop-editor/webview` must migrate to another React Native rich-text editor.
+
 ## 2.4.5 - 2026-06-07
 
 Diff baseline: `v2.4.4`
