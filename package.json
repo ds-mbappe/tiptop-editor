@@ -1,6 +1,6 @@
 {
   "name": "tiptop-editor",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Notion-like editor built with Tiptap v3 and HeroUI",
   "type": "module",
   "main": "./dist/tiptop-editor.umd.js",
@@ -48,6 +48,7 @@
   "license": "MIT",
   "peerDependencies": {
     "@floating-ui/dom": "^1.7.0",
+    "@heroui/react": "^3.0.1",
     "@heroui/styles": "^3.0.1",
     "@tiptap/core": "^3.0.0",
     "@tiptap/react": "^3.0.0",
@@ -71,7 +72,6 @@
     "yjs": "^13.0.0"
   },
   "dependencies": {
-    "@heroui/react": "^3.0.1",
     "@tiptap/extension-bubble-menu": "^3.0.9",
     "@tiptap/extension-code-block-lowlight": "^3.0.9",
     "@tiptap/extension-drag-handle": "^3.0.9",
@@ -110,6 +110,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "@heroui/react": "^3.0.1"
   }
 }

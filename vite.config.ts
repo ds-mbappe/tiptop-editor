@@ -68,6 +68,11 @@ export default defineConfig({
         'lowlight',
         'lucide-react',
         '@floating-ui/dom',
+
+        // heroui must be provided by the consumer (single React-Aria instance),
+        // otherwise slot-injected Dropdown items can't be collected by the
+        // editor's menus ("MenuItem cannot be rendered outside a collection").
+        '@heroui/react',
       ],
       output: {
         globals: {

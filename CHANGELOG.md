@@ -4,6 +4,12 @@
 
 - Nothing yet.
 
+## 3.1.0 - 2026-09-16
+
+### Changed
+
+- **BREAKING (peer dependency): `@heroui/react` is now a peer dependency, no longer bundled.** It has been added to the build's `external` list (matching `lucide-react`, `framer-motion`, etc.) and moved from `dependencies` to `peerDependencies`. Consumers must install `@heroui/react` themselves (most already do). This makes the editor use the consumer's single React-Aria instance, which is required for slot-injected `Dropdown` items (e.g. `dragHandleDropdown`) to be collected by the editor's menus — previously such items failed at runtime with "MenuItem cannot be rendered outside a collection". Side benefit: the ES bundle drops from ~538 KB to ~180 KB.
+
 ## 3.0.0 - 2026-06-08
 
 Diff baseline: `v2.4.5`
