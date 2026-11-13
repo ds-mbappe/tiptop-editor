@@ -86,7 +86,7 @@ export function fromHTMLWithSource(html: string, options: FromHTMLOptions = {}):
   for (let i = 0; i < sorted.length - 1; i++) {
     const slice = html.slice(offsets[sorted[i]], offsets[sorted[i + 1]])
     const body = prepare(slice, options)
-    const empty = body.childNodes.every(n => n instanceof DomText && !/[^ \t\r\n\u000c]/.test(n.nodeValue))
+    const empty = body.childNodes.every(n => n instanceof DomText && !/[^ \t\r\n\f]/.test(n.nodeValue))
     const nodes = empty ? [] : (parser.parse(body as unknown as Node).toJSON().content as DocNode[])
     chunks.push({ html: slice, nodes })
   }

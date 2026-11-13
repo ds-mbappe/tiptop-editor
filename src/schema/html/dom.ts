@@ -209,8 +209,8 @@ export class DomElement extends DomNode {
     return selector.split(',').some(s => matchCompound(this, s.trim()))
   }
   closest(selector: string): DomElement | null {
-    for (let n: DomElement | null = this; n; n = n.parentNode) if (n.matches(selector)) return n
-    return null
+    if (this.matches(selector)) return this
+    return this.parentNode ? this.parentNode.closest(selector) : null
   }
   querySelector(selector: string): DomElement | null {
     return this.querySelectorAll(selector)[0] ?? null
