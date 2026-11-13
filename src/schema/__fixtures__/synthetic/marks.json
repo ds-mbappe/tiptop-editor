@@ -1,0 +1,293 @@
+{
+ "type": "doc",
+ "content": [
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "plain "
+    },
+    {
+     "type": "text",
+     "text": "bold",
+     "marks": [
+      {
+       "type": "bold"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " "
+    },
+    {
+     "type": "text",
+     "text": "bold italic",
+     "marks": [
+      {
+       "type": "bold"
+      },
+      {
+       "type": "italic"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": "italic",
+     "marks": [
+      {
+       "type": "italic"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " u",
+     "marks": [
+      {
+       "type": "underline"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " s",
+     "marks": [
+      {
+       "type": "strike"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " code",
+     "marks": [
+      {
+       "type": "code"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "link",
+     "marks": [
+      {
+       "type": "link",
+       "attrs": {
+        "href": "https://example.com/?a=1&b=2"
+       }
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " "
+    },
+    {
+     "type": "text",
+     "text": "link bold",
+     "marks": [
+      {
+       "type": "link",
+       "attrs": {
+        "href": "https://example.com"
+       }
+      },
+      {
+       "type": "bold"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " mail",
+     "marks": [
+      {
+       "type": "link",
+       "attrs": {
+        "href": "mailto:a@b.c"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "red",
+     "marks": [
+      {
+       "type": "textStyle",
+       "attrs": {
+        "color": "#ff0000"
+       }
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": "rgb",
+     "marks": [
+      {
+       "type": "textStyle",
+       "attrs": {
+        "color": "rgb(17, 85, 204)"
+       }
+      },
+      {
+       "type": "bold"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " hl",
+     "marks": [
+      {
+       "type": "highlight",
+       "attrs": {
+        "color": "#F8E9E9"
+       }
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": " plainhl",
+     "marks": [
+      {
+       "type": "highlight"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "H"
+    },
+    {
+     "type": "text",
+     "text": "2",
+     "marks": [
+      {
+       "type": "subscript"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": "O x"
+    },
+    {
+     "type": "text",
+     "text": "2",
+     "marks": [
+      {
+       "type": "superscript"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "line one"
+    },
+    {
+     "type": "hardBreak"
+    },
+    {
+     "type": "text",
+     "text": "line two"
+    },
+    {
+     "type": "hardBreak",
+     "marks": [
+      {
+       "type": "bold"
+      }
+     ]
+    },
+    {
+     "type": "text",
+     "text": "bold after",
+     "marks": [
+      {
+       "type": "bold"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "escape & < > \" '   nbsp  double  space"
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "all",
+     "marks": [
+      {
+       "type": "link",
+       "attrs": {
+        "href": "https://x.y"
+       }
+      },
+      {
+       "type": "textStyle",
+       "attrs": {
+        "color": "#00f"
+       }
+      },
+      {
+       "type": "bold"
+      },
+      {
+       "type": "italic"
+      },
+      {
+       "type": "strike"
+      },
+      {
+       "type": "underline"
+      },
+      {
+       "type": "highlight",
+       "attrs": {
+        "color": "#ff0"
+       }
+      },
+      {
+       "type": "subscript"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

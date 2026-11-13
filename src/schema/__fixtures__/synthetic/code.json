@@ -1,0 +1,29 @@
+{
+ "type": "doc",
+ "content": [
+  {
+   "type": "codeBlock",
+   "attrs": {
+    "language": "javascript"
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "const a = 1 < 2 && b\n  return \"x\"\n\n"
+    }
+   ]
+  },
+  {
+   "type": "codeBlock",
+   "content": [
+    {
+     "type": "text",
+     "text": "plain code"
+    }
+   ]
+  },
+  {
+   "type": "codeBlock"
+  }
+ ]
+}

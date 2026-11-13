@@ -18,6 +18,7 @@ https://tiptap.dev/docs/ui-components/templates/notion-like-editor
 - Built-in image uploader block
 - Text formatting, lists, code blocks, highlights, alignment, subscript, and superscript
 - TypeScript support
+- `tiptop-editor/schema`: the document schema and an HTML codec with no React, DOM or Tiptap runtime, for other editors (native, server) that must read and write the same content ([docs/SCHEMA.md](docs/SCHEMA.md))
 
 ## Installation
 

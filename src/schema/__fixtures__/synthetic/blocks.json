@@ -1,0 +1,105 @@
+{
+ "type": "doc",
+ "content": [
+  {
+   "type": "heading",
+   "attrs": {
+    "level": 1
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Heading one"
+    }
+   ]
+  },
+  {
+   "type": "heading",
+   "attrs": {
+    "level": 2,
+    "textAlign": "center"
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Centered two"
+    }
+   ]
+  },
+  {
+   "type": "heading",
+   "attrs": {
+    "level": 3,
+    "textAlign": "right"
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Right three"
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "attrs": {
+    "textAlign": "justify"
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Justified"
+    }
+   ]
+  },
+  {
+   "type": "paragraph",
+   "attrs": {
+    "textAlign": "left"
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Left"
+    }
+   ]
+  },
+  {
+   "type": "paragraph"
+  },
+  {
+   "type": "blockquote",
+   "content": [
+    {
+     "type": "paragraph",
+     "content": [
+      {
+       "type": "text",
+       "text": "Quoted"
+      }
+     ]
+    },
+    {
+     "type": "paragraph",
+     "content": [
+      {
+       "type": "text",
+       "text": "second"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "horizontalRule"
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "after rule"
+    }
+   ]
+  }
+ ]
+}
