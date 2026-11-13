@@ -1,0 +1,30 @@
+{
+ "type": "doc",
+ "content": [
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "hi "
+    },
+    {
+     "type": "emoji",
+     "attrs": {
+      "name": "smile"
+     }
+    },
+    {
+     "type": "text",
+     "text": " and "
+    },
+    {
+     "type": "emoji",
+     "attrs": {
+      "name": "not_a_real_emoji_name"
+     }
+    }
+   ]
+  }
+ ]
+}

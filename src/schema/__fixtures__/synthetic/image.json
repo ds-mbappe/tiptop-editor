@@ -1,0 +1,45 @@
+{
+ "type": "doc",
+ "content": [
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "before"
+    }
+   ]
+  },
+  {
+   "type": "imageUploader",
+   "attrs": {
+    "id": "img-1",
+    "src": "https://cdn.example.com/a.png",
+    "uploading": false,
+    "selectMedia": false,
+    "progress": 100,
+    "failed": false,
+    "name": "a.png",
+    "size": 1234
+   }
+  },
+  {
+   "type": "imageUploader",
+   "attrs": {
+    "id": "img-2",
+    "src": "https://cdn.example.com/b.png",
+    "uploading": false,
+    "selectMedia": false
+   }
+  },
+  {
+   "type": "paragraph",
+   "content": [
+    {
+     "type": "text",
+     "text": "after"
+    }
+   ]
+  }
+ ]
+}
